@@ -41,6 +41,7 @@ input[type=password] {
 
 input[type=text]:disabled {
   color: #999;
+  background: #fafafa;
 }
 
 .Unlock .error {
@@ -57,7 +58,7 @@ input[type=text]:disabled {
   margin: 0 auto;
   text-align: center;
   padding: 20px;
-  margin-top: 30vh;
+  margin-top: 10vh;
   font-size: 18px;
 }
 
@@ -71,6 +72,26 @@ input[type=text]:disabled {
   margin: 0;
   height: 120px;
   margin-bottom: 40px;
+}
+
+.Faucet-balances {
+  margin-bottom: 40px;
+  background: white;
+  font-size: 14px;
+  padding: 10px;
+}
+
+.Faucet-balances-loading {
+  float: left;
+  overflow: visible;
+  width: 0;
+  opacity: 0.5;
+}
+
+.Faucet-balances-icon {
+  height: 20px;
+  margin-bottom: -6px;
+  margin-right: 5px;
 }
 
 .Faucet-form {

@@ -1,8 +1,11 @@
 import * as React from "react";
 
-import { sendTokens } from "../lib/web3";
+import { List, OrderedMap } from "immutable";
 
-import { List } from "immutable";
+import BigNumber from "bignumber.js";
+import Web3 from "web3";
+import { DEFAULT_BALANCES, getWeb3, IMAGES, sendTokens, updateBalances } from "../lib/web3";
+import Loading from "./Loading";
 
 export enum MessageType {
     ERROR = "error",
@@ -24,6 +27,11 @@ interface FaucetState {
     disabled: boolean;
 
     messages: List<Message>;
+
+    balances: OrderedMap<string, BigNumber>;
+    balancesLoading: boolean;
+
+    web3: Web3;
 }
 
 interface FaucetProps {
@@ -32,6 +40,7 @@ interface FaucetProps {
 }
 
 class Faucet extends React.Component<FaucetProps, FaucetState> {
+    private timeout: NodeJS.Timer;
 
     constructor(props: FaucetProps, context: object) {
         super(props, context);
@@ -43,19 +52,43 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             disabled: false,
 
             messages: List(),
+
+            balances: DEFAULT_BALANCES,
+            balancesLoading: true,
+
+            web3: getWeb3(props.PRIVATE_KEY),
         };
     }
 
     public async componentDidMount() {
-        //
+        const { ADDRESS } = this.props;
+        const { web3 } = this.state;
+        const loop = async () => {
+            this.setState({ balancesLoading: true });
+            this.setState({ balances: await updateBalances(web3, ADDRESS) });
+            this.setState({ balancesLoading: false });
+            clearTimeout(this.timeout);
+            this.timeout = setTimeout(loop, 30 * 1000);
+        };
+        loop();
+    }
+
+    public componentWillUnmount() {
+        clearTimeout(this.timeout);
     }
 
     public render() {
-        const { recipient, sendETH, sendREN, sendTOK, messages, disabled } = this.state;
+        const { recipient, sendETH, sendREN, sendTOK, messages, disabled, balances, balancesLoading } = this.state;
 
         return (
             <>
                 <div className="Faucet">
+                    <div className="Faucet-balances">
+                        {balancesLoading ? <div className="Faucet-balances-loading"><Loading /></div> : null}
+                        {balances.map((value: BigNumber, key: string) => {
+                            return <p key={key}><img className="Faucet-balances-icon" src={IMAGES.get(key)} />{value.toFixed()} {key}</p>;
+                        }).toArray()}
+                    </div>
                     <div className="Faucet-options">
                         <p><input type="checkbox" className="checkbox" name="sendETH" checked={sendETH} onChange={this.handleCheck} />Transfer ETH</p>
                         <p><input type="checkbox" className="checkbox" name="sendREN" checked={sendREN} onChange={this.handleCheck} />Transfer REN</p>
@@ -98,12 +131,12 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
 
     private handleFaucet = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const { ADDRESS, PRIVATE_KEY } = this.props;
-        const { sendETH, sendREN, sendTOK, recipient } = this.state;
+        const { ADDRESS } = this.props;
+        const { sendETH, sendREN, sendTOK, recipient, web3 } = this.state;
         console.log(ADDRESS);
         this.setState({ disabled: true, messages: List() });
         try {
-            await sendTokens(ADDRESS, PRIVATE_KEY, sendETH, sendREN, sendTOK, recipient, this.addMessage);
+            await sendTokens(ADDRESS, web3, sendETH, sendREN, sendTOK, recipient, this.addMessage);
         } catch (err) {
             console.error(err);
             this.addMessage({
