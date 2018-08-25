@@ -2,6 +2,7 @@
   "name": "node-pool-js",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://republicprotocol.github.io/internal-contract-js",
   "dependencies": {
     "@types/bignumber.js": "^5.0.0",
     "@types/crypto-js": "^3.1.43",
@@ -16,6 +17,7 @@
     "ethereumjs-tx": "^1.3.7",
     "ethereumjs-util": "^5.2.0",
     "ethereumjs-wallet": "^0.6.2",
+    "gh-pages": "^1.2.0",
     "immutable": "^3.8.2",
     "query-string": "^6.1.0",
     "react": "^16.4.2",
@@ -31,7 +33,9 @@
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "devDependencies": {
     "@types/jest": "^23.3.1",
