@@ -1,14 +1,11 @@
 import * as React from "react";
 
-import { createBrowserHistory } from "history";
-import { Router } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 
 import Faucet from "./Faucet";
 import Unlock from "./Unlock";
 
 import "../styles/App.css";
-
-const history = createBrowserHistory();
 
 interface AppProps {
 
@@ -33,7 +30,7 @@ class App extends React.Component<AppProps, AppState> {
         // tslint:disable:jsx-no-lambda
         return (
             <div className="App">
-                <Router history={history}>
+                <HashRouter>
                     <div className="app">
                         {PRIVATE_KEY === null || ADDRESS === null ?
                             <Unlock unlockCallback={this.unlockCallback} /> :
@@ -41,7 +38,7 @@ class App extends React.Component<AppProps, AppState> {
                         }
                         {/* <Route path="/" exact render={() => <Faucet ADDRESS={ADDRESS} PRIVATE_KEY={PRIVATE_KEY} />} /> */}
                     </div>
-                </Router>
+                </HashRouter>
             </div>
         );
         // tslint:enable:jsx-no-lambda

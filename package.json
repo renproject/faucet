@@ -2,7 +2,7 @@
   "name": "node-pool-js",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://republicprotocol.github.io/internal-contract-js",
+  "homepage": "https://republicprotocol.github.io/internal-faucet-js",
   "dependencies": {
     "@types/bignumber.js": "^5.0.0",
     "@types/crypto-js": "^3.1.43",
