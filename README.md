@@ -1,6 +1,10 @@
-# Node Pool Marketplace
+# Internal Faucet
 
-The front-end for the Darknode Pooling dApp.
+[https://republicprotocol.github.io/internal-faucet-js/](https://republicprotocol.github.io/internal-faucet-js/)
+
+## Updating
+
+To deploy the latest commit, run `npm run deploy`.
 
 ## Preview
 
