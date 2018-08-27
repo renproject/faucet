@@ -94,6 +94,10 @@ input[type=text]:disabled {
   margin-right: 5px;
 }
 
+.lighter {
+  color: #999;
+}
+
 .Faucet-form {
   margin-bottom: 40px;
 }

@@ -104,6 +104,8 @@ class Unlock extends React.Component<UnlockProps, UnlockState> {
 
         const address = new Buffer(privateToAddress(new Buffer(privateKey, "hex"))).toString("hex");
 
+        console.log(`Kovan Faucet address: ${address}`);
+
         unlockCallback(address, privateKey);
     }
 }

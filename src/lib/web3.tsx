@@ -89,23 +89,23 @@ export const sendTokens = async (
         nonce++;
     }
 
-    let toSend = List<[string, string, string, BN]>();
+    let toSend = List<[string, string, BN]>();
 
     if (sendREN) {
         toSend = toSend
-            .push(["REN", "130k", "0x6f429121a3bd3e6c1c17edbc676eec44cf117faf", new BN("1B87506A3E7B0D400000", "hex")]);
+            .push(["REN", "0x6f429121a3bd3e6c1c17edbc676eec44cf117faf", new BN("1B87506A3E7B0D400000", "hex")]);
     }
 
     if (sendTOK) {
         toSend = toSend
-            .push(["DGX", "30", "0x0798297a11cefef7479e40e67839fee3c025691e", new BN("6FC23AC00", "hex")])
-            .push(["ABC", "3000", "0xc65d2e9c8924d4848935f4f22e3deca78c5217e5", new BN("AA87BEE538000", "hex")])
-            .push(["XYZ", "300", "0x5753addcd942b495b7297cbfc240a24ba7058274", new BN("1043561A8829300000", "hex")]);
+            .push(["DGX", "0x0798297a11cefef7479e40e67839fee3c025691e", new BN("6FC23AC00", "hex")])
+            .push(["ABC", "0xc65d2e9c8924d4848935f4f22e3deca78c5217e5", new BN("AA87BEE538000", "hex")])
+            .push(["XYZ", "0x5753addcd942b495b7297cbfc240a24ba7058274", new BN("1043561A8829300000", "hex")]);
     }
     for (const params of toSend.toArray()) {
-        const erc20 = await getERC20Contract(web3, params[2]);
+        const erc20 = await getERC20Contract(web3, params[1]);
 
-        erc20.methods.transfer(recipient, params[3]).send({
+        erc20.methods.transfer(recipient, params[2]).send({
             nonce: web3.utils.toHex(nonce),
             gasPrice: web3.utils.toHex(1000000000),
             from: account,
@@ -114,7 +114,7 @@ export const sendTokens = async (
             addMessage({
                 type: MessageType.INFO,
                 key: params[0],
-                message: <span>Sending {params[1]} {params[0]} (<a href={`https://kovan.etherscan.io/tx/${tx}`}>Etherscan Link</a>)</span>,
+                message: <span>Sending {TRANSFERS.get(params[0])} {params[0]} (<a href={`https://kovan.etherscan.io/tx/${tx}`}>Etherscan Link</a>)</span>,
             });
         }).on("error", (err: Error) => {
             console.error(err);
@@ -124,7 +124,7 @@ export const sendTokens = async (
             addMessage({
                 type: MessageType.ERROR,
                 key: params[0],
-                message: <span>Error sending {params[1]} {params[0]}: {err.message}</span>,
+                message: <span>Error sending {TRANSFERS.get(params[0])} {params[0]}: {err.message}</span>,
             });
         });
         nonce++;
@@ -145,6 +145,14 @@ export const IMAGES = OrderedMap<string, any>()
     .set("DGX", require("../img/dgx.png"))
     .set("ABC", require("../img/abc.svg"))
     .set("XYZ", require("../img/xyz.svg"));
+
+
+export const TRANSFERS = OrderedMap<string, BigNumber>()
+    .set("ETH", new BigNumber(1.3))
+    .set("REN", new BigNumber(130000))
+    .set("DGX", new BigNumber(30))
+    .set("ABC", new BigNumber(3000))
+    .set("XYZ", new BigNumber(300));
 
 export const updateBalances = async (web3: Web3, account: string): Promise<OrderedMap<string, BigNumber>> => {
 
