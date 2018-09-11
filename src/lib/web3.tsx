@@ -168,7 +168,7 @@ export const updateBalances = async (web3: Web3, account: string): Promise<Order
     const tokens = List<[string, number, string]>()
         .push(["REN", 18, "0x99806D107eda625516d954621dF175a002D223e6"])
         .push(["DGX", 9, "0x0798297a11cEFEF7479E40e67839fEe3c025691e"])
-        .push(["ABC", 12, "0xfC42491547f1837e2D0F9A0E6b12b1d883fB8Bd0"])
+        .push(["ABC", 18, "0xfC42491547f1837e2D0F9A0E6b12b1d883fB8Bd0"])
         .push(["XYZ", 18, "0xC9382f7b2C683e08AaDe773EB97BcE4a0d6461A0"])
         .push(["PQR", 18, "0x724c964a614Eb0748b48dF79eD5D93C108E361c4"]);
 
