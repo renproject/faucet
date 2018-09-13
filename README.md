@@ -4,7 +4,9 @@
 
 ## Updating
 
-To deploy the latest commit, run `npm run deploy`.
+Before committing, update `./public/commitHash.json` with the latest commit hash.
+
+After committing, run `npm run deploy`.
 
 ## Preview
 
