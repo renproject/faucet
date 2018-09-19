@@ -10,12 +10,27 @@ import ProviderEngine from "web3-provider-engine";
 import FetchSubprovider from "web3-provider-engine/subproviders/fetch";
 import NonceSubprovider from "web3-provider-engine/subproviders/nonce-tracker";
 
-
 import BigNumber from "bignumber.js";
-import { BN } from "bn.js";
 
 import { Contract } from "web3/types";
 import { Message, MessageType } from "../components/Faucet";
+
+export enum Token {
+    ETH = "ETH",
+    REN = "REN",
+    DGX = "DGX",
+    TUSD = "TUSD",
+    OMG = "OMG",
+    ZRX = "ZRX",
+}
+
+export const TOKENS = OrderedMap<string, { code: Token, digits: number, address: string, amount: number, image: any }>()
+    .set(Token.ETH, { code: Token.ETH, digits: 18, address: "", amount: 2, image: require("../img/eth.svg") })
+    .set(Token.REN, { code: Token.REN, digits: 18, address: "0x81793734c6Cf6961B5D0D2d8a30dD7DF1E1803f1", amount: 100000, image: require("../img/ren.svg") })
+    .set(Token.DGX, { code: Token.DGX, digits: 9, address: "0x7583D3019b078037B8607487cc4c161e19C50869", amount: 20, image: require("../img/dgx.png") })
+    .set(Token.TUSD, { code: Token.TUSD, digits: 18, address: "0xD09A65Fd6DF182dBf9cC853697eFA520369015E4", amount: 100, image: require("../img/tusd.png") })
+    .set(Token.OMG, { code: Token.OMG, digits: 18, address: "0xb57b1105F41e6117F8a67170e1bd7Ec9149D7ced", amount: 100, image: require("../img/omg.png") })
+    .set(Token.ZRX, { code: Token.ZRX, digits: 18, address: "0x932d170Cd254Db4c7321C6A89D7722714d82a69f", amount: 400, image: require("../img/zrx.png") });
 
 const standardTokenABI = require("./abi/StandardToken.json").abi;
 
@@ -72,7 +87,7 @@ export const sendTokens = async (
         }).on("transactionHash", (transactionHash: string) => {
             addMessage({
                 type: MessageType.INFO,
-                key: "eth",
+                key: Token.ETH,
                 message: <span>Sending 2 ETH (<a href={`https://kovan.etherscan.io/tx/${transactionHash}`}>Etherscan Link</a>)</span>,
             });
         }).on("error", (err: Error) => {
@@ -82,31 +97,34 @@ export const sendTokens = async (
             }
             addMessage({
                 type: MessageType.ERROR,
-                key: "eth",
+                key: Token.ETH,
                 message: <span>Error sending 2 ETH: {err.message}</span>,
             });
         });
         nonce++;
     }
 
-    let toSend = List<[string, string, BN]>();
+    let toSend = List<string>();
 
     if (sendREN) {
         toSend = toSend
-            .push(["REN", "0x99806D107eda625516d954621dF175a002D223e6", new BN("152d02c7e14af6800000", "hex")]);
+            .push(Token.REN);
     }
 
     if (sendTOK) {
         toSend = toSend
-            .push(["DGX", "0x0798297a11cEFEF7479E40e67839fEe3c025691e", new BN("174876e800", "hex")])
-            .push(["ABC", "0xfC42491547f1837e2D0F9A0E6b12b1d883fB8Bd0", new BN("56bc75e2d63100000", "hex")])
-            .push(["XYZ", "0xC9382f7b2C683e08AaDe773EB97BcE4a0d6461A0", new BN("56bc75e2d63100000", "hex")])
-            .push(["PQR", "0x724c964a614Eb0748b48dF79eD5D93C108E361c4", new BN("56bc75e2d63100000", "hex")]);
+            .push(Token.DGX)
+            .push(Token.TUSD)
+            .push(Token.OMG)
+            .push(Token.ZRX);
     }
-    for (const params of toSend.toArray()) {
-        const erc20 = await getERC20Contract(web3, params[1]);
+    for (const tokenSymbol of toSend.toArray()) {
+        const tokenDetails = TOKENS.get(tokenSymbol);
 
-        erc20.methods.transfer(recipient, params[2]).send({
+        const erc20 = await getERC20Contract(web3, tokenDetails.address);
+
+        const value = new BigNumber(tokenDetails.amount).multipliedBy(new BigNumber(10).pow(tokenDetails.digits));
+        erc20.methods.transfer(recipient, value).send({
             nonce: web3.utils.toHex(nonce),
             gasPrice: web3.utils.toHex(1000000000),
             from: account,
@@ -114,8 +132,8 @@ export const sendTokens = async (
             console.log(tx);
             addMessage({
                 type: MessageType.INFO,
-                key: params[0],
-                message: <span>Sending {TRANSFERS.get(params[0]).toString()} {params[0]} (<a href={`https://kovan.etherscan.io/tx/${tx}`}>Etherscan Link</a>)</span>,
+                key: tokenSymbol,
+                message: <span>Sending {tokenDetails.amount} {tokenSymbol} (<a href={`https://kovan.etherscan.io/tx/${tx}`}>Etherscan Link</a>)</span>,
             });
         }).on("error", (err: Error) => {
             console.error(err);
@@ -124,8 +142,8 @@ export const sendTokens = async (
             }
             addMessage({
                 type: MessageType.ERROR,
-                key: params[0],
-                message: <span>Error sending {TRANSFERS.get(params[0]).toString()} {params[0]}: {err.message}</span>,
+                key: tokenSymbol,
+                message: <span>Error sending {tokenDetails.amount} {tokenSymbol}: {err.message}</span>,
             });
         });
         nonce++;
@@ -134,47 +152,24 @@ export const sendTokens = async (
 
 
 export const DEFAULT_BALANCES = OrderedMap<string, BigNumber>()
-    .set("ETH", new BigNumber(0))
-    .set("REN", new BigNumber(0))
-    .set("DGX", new BigNumber(0))
-    .set("ABC", new BigNumber(0))
-    .set("XYZ", new BigNumber(0))
-    .set("PQR", new BigNumber(0));
-
-export const IMAGES = OrderedMap<string, any>()
-    .set("ETH", require("../img/eth.svg"))
-    .set("REN", require("../img/ren.svg"))
-    .set("DGX", require("../img/dgx.png"))
-    .set("ABC", require("../img/abc.svg"))
-    .set("XYZ", require("../img/xyz.svg"))
-    .set("PQR", require("../img/pqr.svg"));
-
-
-// Note: The actual values sent are hard-coded in the `toSend` array.
-export const TRANSFERS = OrderedMap<string, BigNumber>()
-    .set("ETH", new BigNumber(2))
-    .set("REN", new BigNumber(100000))
-    .set("DGX", new BigNumber(100))
-    .set("ABC", new BigNumber(100))
-    .set("XYZ", new BigNumber(100))
-    .set("PQR", new BigNumber(100));
+    .set(Token.ETH, new BigNumber(0))
+    .set(Token.REN, new BigNumber(0))
+    .set(Token.DGX, new BigNumber(0))
+    .set(Token.TUSD, new BigNumber(0))
+    .set(Token.OMG, new BigNumber(0))
+    .set(Token.ZRX, new BigNumber(0));
 
 export const updateBalances = async (web3: Web3, account: string): Promise<OrderedMap<string, BigNumber>> => {
 
     let balances = DEFAULT_BALANCES;
 
-    balances = balances.set("ETH", new BigNumber(await web3.eth.getBalance(account)).div(new BigNumber(10).pow(18)));
-
-    const tokens = List<[string, number, string]>()
-        .push(["REN", 18, "0x99806D107eda625516d954621dF175a002D223e6"])
-        .push(["DGX", 9, "0x0798297a11cEFEF7479E40e67839fEe3c025691e"])
-        .push(["ABC", 18, "0xfC42491547f1837e2D0F9A0E6b12b1d883fB8Bd0"])
-        .push(["XYZ", 18, "0xC9382f7b2C683e08AaDe773EB97BcE4a0d6461A0"])
-        .push(["PQR", 18, "0x724c964a614Eb0748b48dF79eD5D93C108E361c4"]);
-
-    for (const token of tokens.toArray()) {
-        const erc20 = await getERC20Contract(web3, token[2]);
-        balances = balances.set(token[0], new BigNumber(await erc20.methods.balanceOf(account).call()).div(new BigNumber(10).pow(token[1])));
+    for (const token of TOKENS.toArray()) {
+        if (token.code === "ETH") {
+            balances = balances.set(token.code, new BigNumber(await web3.eth.getBalance(account)).div(new BigNumber(10).pow(token.digits)));
+        } else {
+            const erc20 = await getERC20Contract(web3, token.address);
+            balances = balances.set(token.code, new BigNumber(await erc20.methods.balanceOf(account).call()).div(new BigNumber(10).pow(token.digits)));
+        }
     }
 
     return balances;

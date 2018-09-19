@@ -4,7 +4,7 @@ import { List, OrderedMap } from "immutable";
 
 import BigNumber from "bignumber.js";
 import Web3 from "web3";
-import { DEFAULT_BALANCES, getWeb3, IMAGES, sendTokens, TRANSFERS, updateBalances } from "../lib/web3";
+import { DEFAULT_BALANCES, getWeb3, sendTokens, TOKENS, updateBalances } from "../lib/web3";
 import Loading from "./Loading";
 
 export enum MessageType {
@@ -86,7 +86,7 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
                     <div className="Faucet-balances">
                         {balancesLoading ? <div className="Faucet-balances-loading"><Loading /></div> : null}
                         {balances.map((value: BigNumber, key: string) => {
-                            return <p key={key}><img className="Faucet-balances-icon" src={IMAGES.get(key)} />{value.toFixed()} {key} <span className="lighter">({value.div(TRANSFERS.get(key)).integerValue().toFixed()})</span></p>;
+                            return <p key={key}><img className="Faucet-balances-icon" src={TOKENS.get(key).image} />{value.toFixed()} {key} <span className="lighter">({value.div(TOKENS.get(key).amount).integerValue().toFixed()})</span></p>;
                         }).toArray()}
                     </div>
                     <div className="Faucet-options">
