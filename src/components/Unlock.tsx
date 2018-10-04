@@ -13,7 +13,8 @@ interface UnlockState {
 }
 
 interface UnlockProps {
-    unlockCallback: (ADDRESS: string, PRIVATE_KEY: string) => void;
+    blacklist: boolean;
+    unlockCallback?: (ADDRESS: string, PRIVATE_KEY: string) => void;
 }
 
 class Unlock extends React.Component<UnlockProps, UnlockState> {
@@ -29,6 +30,7 @@ class Unlock extends React.Component<UnlockProps, UnlockState> {
 
     public render() {
         const { password, error, loading } = this.state;
+        const { blacklist } = this.props;
 
         return (
             <>
@@ -41,10 +43,12 @@ class Unlock extends React.Component<UnlockProps, UnlockState> {
                             value={password}
                             name="password"
                             onChange={this.handleInput}
+                            disabled={blacklist}
                         />
                     </form>
                     {loading ? <div className="error"><Loading /></div> : null}
                     {error !== null ? <div className="error">{error}</div> : null}
+                    {blacklist ? <div className="error">You have been blacklisted</div> : null}
                 </div>
             </>
         );
@@ -106,7 +110,11 @@ class Unlock extends React.Component<UnlockProps, UnlockState> {
 
         console.log(`Kovan Faucet address: 0x${address}`);
 
-        unlockCallback(address, privateKey);
+        if (unlockCallback && !this.props.blacklist) {
+            unlockCallback(address, privateKey);
+        } else {
+            return;
+        }
     }
 }
 

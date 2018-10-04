@@ -1,9 +1,11 @@
 import * as React from "react";
 
 import { List, OrderedMap } from "immutable";
+import { Redirect } from "react-router";
 
 import BigNumber from "bignumber.js";
 import Web3 from "web3";
+import { checkAddress } from "../lib/blacklist";
 import { DEFAULT_BALANCES, getWeb3, sendTokens, TOKENS, updateBalances } from "../lib/web3";
 import Loading from "./Loading";
 
@@ -32,6 +34,8 @@ interface FaucetState {
     balancesLoading: boolean;
 
     web3: Web3;
+
+    blacklisted: boolean;
 }
 
 interface FaucetProps {
@@ -57,6 +61,8 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             balancesLoading: true,
 
             web3: getWeb3(props.PRIVATE_KEY),
+
+            blacklisted: false,
         };
     }
 
@@ -78,7 +84,11 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
     }
 
     public render() {
-        const { recipient, sendETH, sendREN, sendTOK, messages, disabled, balances, balancesLoading } = this.state;
+        const { recipient, sendETH, sendREN, sendTOK, messages, disabled, balances, balancesLoading, blacklisted } = this.state;
+
+        if (blacklisted) {
+            return <Redirect push to="/blacklisted" />;
+        }
 
         return (
             <>
@@ -134,6 +144,12 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
         const { ADDRESS } = this.props;
         const { sendETH, sendREN, sendTOK, recipient, web3 } = this.state;
         console.log(ADDRESS);
+        try {
+            checkAddress(recipient);
+        } catch (err) {
+            this.setState({ blacklisted: true });
+            return;
+        }
         this.setState({ disabled: true, messages: List() });
         try {
             await sendTokens(ADDRESS, web3, sendETH, sendREN, sendTOK, recipient, this.addMessage);

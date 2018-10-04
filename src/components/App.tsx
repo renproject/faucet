@@ -2,7 +2,7 @@ import * as React from "react";
 
 import axios from "axios";
 
-import { HashRouter } from "react-router-dom";
+import { HashRouter, Route } from "react-router-dom";
 
 import Faucet from "./Faucet";
 import Unlock from "./Unlock";
@@ -50,19 +50,22 @@ class App extends React.Component<AppProps, AppState> {
 
     public render() {
         const { ADDRESS, PRIVATE_KEY, outOfDate } = this.state;
+
+        const main = () =>
+            PRIVATE_KEY === null || ADDRESS === null ?
+                <Unlock blacklist={false} unlockCallback={this.unlockCallback} /> :
+                <>
+                    {outOfDate ? <OutOfDate /> : null}
+                    <Faucet ADDRESS={ADDRESS} PRIVATE_KEY={PRIVATE_KEY} />
+                </>;
+
         // tslint:disable:jsx-no-lambda
         return (
             <div className="App">
                 <HashRouter>
                     <div className="app">
-                        {PRIVATE_KEY === null || ADDRESS === null ?
-                            <Unlock unlockCallback={this.unlockCallback} /> :
-                            <>
-                                {outOfDate ? <OutOfDate /> : null}
-                                <Faucet ADDRESS={ADDRESS} PRIVATE_KEY={PRIVATE_KEY} />
-                            </>
-                        }
-                        {/* <Route path="/" exact render={() => <Faucet ADDRESS={ADDRESS} PRIVATE_KEY={PRIVATE_KEY} />} /> */}
+                        <Route path="/blacklisted" render={() => <Unlock blacklist={true} />} />
+                        <Route path="/" exact render={main} />
                     </div>
                 </HashRouter>
             </div>
