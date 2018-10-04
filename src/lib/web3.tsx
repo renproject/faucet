@@ -26,11 +26,11 @@ export enum Token {
 
 export const TOKENS = OrderedMap<string, { code: Token, digits: number, address: string, amount: number, image: any }>()
     .set(Token.ETH, { code: Token.ETH, digits: 18, address: "", amount: 2, image: require("../img/eth.svg") })
-    .set(Token.REN, { code: Token.REN, digits: 18, address: "0x81793734c6Cf6961B5D0D2d8a30dD7DF1E1803f1", amount: 100000, image: require("../img/ren.svg") })
-    .set(Token.DGX, { code: Token.DGX, digits: 9, address: "0x7583D3019b078037B8607487cc4c161e19C50869", amount: 20, image: require("../img/dgx.png") })
-    .set(Token.TUSD, { code: Token.TUSD, digits: 18, address: "0xD09A65Fd6DF182dBf9cC853697eFA520369015E4", amount: 100, image: require("../img/tusd.png") })
-    .set(Token.OMG, { code: Token.OMG, digits: 18, address: "0xb57b1105F41e6117F8a67170e1bd7Ec9149D7ced", amount: 100, image: require("../img/omg.png") })
-    .set(Token.ZRX, { code: Token.ZRX, digits: 18, address: "0x932d170Cd254Db4c7321C6A89D7722714d82a69f", amount: 400, image: require("../img/zrx.png") });
+    .set(Token.REN, { code: Token.REN, digits: 18, address: "0x2CD647668494c1B15743AB283A0f980d90a87394", amount: 100000, image: require("../img/ren.svg") })
+    .set(Token.DGX, { code: Token.DGX, digits: 9, address: "0x932F4580B261e9781A6c3c102133C8fDd4503DFc", amount: 20, image: require("../img/dgx.png") })
+    .set(Token.TUSD, { code: Token.TUSD, digits: 18, address: "0x525389752ffe6487d33EF53FBcD4E5D3AD7937a0", amount: 100, image: require("../img/tusd.png") })
+    .set(Token.OMG, { code: Token.OMG, digits: 18, address: "0x66497ba75dD127b46316d806c077B06395918064", amount: 100, image: require("../img/omg.png") })
+    .set(Token.ZRX, { code: Token.ZRX, digits: 18, address: "0x6EB628dCeFA95802899aD3A9EE0C7650Ac63d543", amount: 400, image: require("../img/zrx.png") });
 
 const standardTokenABI = require("./abi/StandardToken.json").abi;
 
