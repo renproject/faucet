@@ -6,6 +6,8 @@ import Web3 from "web3";
 import App from "./components/App";
 import registerServiceWorker from "./registerServiceWorker";
 
+import { _catch_ } from "./components/ErrorBoundary";
+
 import "./styles/index.css";
 
 declare global {
@@ -15,7 +17,7 @@ declare global {
 }
 
 ReactDOM.render(
-  <App />,
+  _catch_(<App />),
   document.getElementById("root") as HTMLElement
 );
 registerServiceWorker();

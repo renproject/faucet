@@ -27,7 +27,7 @@ export enum Token {
 export const TOKENS = OrderedMap<string, { code: Token, digits: number, address: string, amount: number, image: any }>()
     .set(Token.ETH, { code: Token.ETH, digits: 18, address: "", amount: 2, image: require("../img/eth.svg") })
     .set(Token.REN, { code: Token.REN, digits: 18, address: "0x2CD647668494c1B15743AB283A0f980d90a87394", amount: 100000, image: require("../img/ren.svg") })
-    .set(Token.DGX, { code: Token.DGX, digits: 9, address: "0x932F4580B261e9781A6c3c102133C8fDd4503DFc", amount: 20, image: require("../img/dgx.png") })
+    .set(Token.DGX, { code: Token.DGX, digits: 9, address: "0x7d6D31326b12B6CBd7f054231D47CbcD16082b71", amount: 20, image: require("../img/dgx.png") })
     .set(Token.TUSD, { code: Token.TUSD, digits: 18, address: "0x525389752ffe6487d33EF53FBcD4E5D3AD7937a0", amount: 100, image: require("../img/tusd.png") })
     .set(Token.OMG, { code: Token.OMG, digits: 18, address: "0x66497ba75dD127b46316d806c077B06395918064", amount: 100, image: require("../img/omg.png") })
     .set(Token.ZRX, { code: Token.ZRX, digits: 18, address: "0x6EB628dCeFA95802899aD3A9EE0C7650Ac63d543", amount: 400, image: require("../img/zrx.png") });
