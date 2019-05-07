@@ -40,7 +40,7 @@ export enum Token {
 // }
 
 export const TOKENS = OrderedMap<string, { code: Token, digits: number, address: string, amount: number, image: any }>()
-    .set(Token.ETH, { code: Token.ETH, digits: 18, address: "", amount: 2, image: require("../img/eth.svg") })
+    .set(Token.ETH, { code: Token.ETH, digits: 18, address: "", amount: 0.2, image: require("../img/eth.svg") })
     .set(Token.REN, { code: Token.REN, digits: 18, address: "0x2CD647668494c1B15743AB283A0f980d90a87394", amount: 100000, image: require("../img/ren.svg") })
     .set(Token.DAI, { code: Token.DAI, digits: 18, address: "0xc4375b7de8af5a38a93548eb8453a498222c4ff2", amount: 1, image: require("../img/dai.svg") })
     // .set(Token.DGX, { code: Token.DGX, digits: 9, address: "0x7d6D31326b12B6CBd7f054231D47CbcD16082b71", amount: 20, image: require("../img/dgx.png") })
