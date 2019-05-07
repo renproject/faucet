@@ -21,6 +21,8 @@ export interface Message {
 }
 
 interface FaucetState {
+    // TOKENS: TOKENS | null;
+
     recipient: string;
 
     sendETH: boolean;
@@ -49,6 +51,8 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
     constructor(props: FaucetProps, context: object) {
         super(props, context);
         this.state = {
+            // TOKENS: null,
+
             recipient: "",
             sendETH: true,
             sendREN: true,
@@ -69,8 +73,13 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
     public async componentDidMount() {
         const { ADDRESS } = this.props;
         const { web3 } = this.state;
+
+        // const TOKENS = await getTokens();
+        // this.setState({ TOKENS });
+
         const loop = async () => {
             this.setState({ balancesLoading: true });
+            // this.setState({ balances: await updateBalances(TOKENS, web3, ADDRESS) });
             this.setState({ balances: await updateBalances(web3, ADDRESS) });
             this.setState({ balancesLoading: false });
             clearTimeout(this.timeout);
@@ -153,6 +162,10 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
         this.setState({ disabled: true, messages: List() });
         try {
             await sendTokens(ADDRESS, web3, sendETH, sendREN, sendTOK, recipient, this.addMessage);
+            // if (!TOKENS) {
+            //     throw new Error("Addresses not loaded yet. Please try again shortly.");
+            // }
+            // await sendTokens(TOKENS, ADDRESS, web3, sendETH, sendREN, sendTOK, recipient, this.addMessage);
         } catch (err) {
             console.error(err);
             this.addMessage({

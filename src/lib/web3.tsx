@@ -18,19 +18,34 @@ import { Message, MessageType } from "../components/Faucet";
 export enum Token {
     ETH = "ETH",
     REN = "REN",
-    DGX = "DGX",
-    TUSD = "TUSD",
-    OMG = "OMG",
-    ZRX = "ZRX",
+    // DGX = "DGX",
+    // TUSD = "TUSD",
+    // OMG = "OMG",
+    // ZRX = "ZRX",
 }
+
+// export type TOKENS = OrderedMap<string, { code: Token, digits: number, address: string, amount: number, image: any }>
+
+// export const getTokens = async (): Promise<TOKENS> => {
+//     const testnet = (await axios.get(`https://republicprotocol.github.io/contract-index/networks/testnet.json?v=${Math.random().toString(36).substring(7)}`)).data;
+
+//     return OrderedMap<string, { code: Token, digits: number, address: string, amount: number, image: any }>()
+//         .set(Token.ETH, { code: Token.ETH, digits: 18, address: "", amount: 2, image: require("../img/eth.svg") })
+//         .set(Token.REN, { code: Token.REN, digits: 18, address: "0x2CD647668494c1B15743AB283A0f980d90a87394", amount: 100000, image: require("../img/ren.svg") })
+//         .set(Token.DGX, { code: Token.DGX, digits: 9, address: "0x7d6D31326b12B6CBd7f054231D47CbcD16082b71", amount: 20, image: require("../img/dgx.png") })
+//         .set(Token.TUSD, { code: Token.TUSD, digits: 18, address: "0x525389752ffe6487d33EF53FBcD4E5D3AD7937a0", amount: 100, image: require("../img/tusd.png") })
+//         .set(Token.OMG, { code: Token.OMG, digits: 18, address: "0x66497ba75dD127b46316d806c077B06395918064", amount: 100, image: require("../img/omg.png") })
+//         .set(Token.ZRX, { code: Token.ZRX, digits: 18, address: "0x6EB628dCeFA95802899aD3A9EE0C7650Ac63d543", amount: 400, image: require("../img/zrx.png") });
+// }
 
 export const TOKENS = OrderedMap<string, { code: Token, digits: number, address: string, amount: number, image: any }>()
     .set(Token.ETH, { code: Token.ETH, digits: 18, address: "", amount: 2, image: require("../img/eth.svg") })
     .set(Token.REN, { code: Token.REN, digits: 18, address: "0x2CD647668494c1B15743AB283A0f980d90a87394", amount: 100000, image: require("../img/ren.svg") })
-    .set(Token.DGX, { code: Token.DGX, digits: 9, address: "0x7d6D31326b12B6CBd7f054231D47CbcD16082b71", amount: 20, image: require("../img/dgx.png") })
-    .set(Token.TUSD, { code: Token.TUSD, digits: 18, address: "0x525389752ffe6487d33EF53FBcD4E5D3AD7937a0", amount: 100, image: require("../img/tusd.png") })
-    .set(Token.OMG, { code: Token.OMG, digits: 18, address: "0x66497ba75dD127b46316d806c077B06395918064", amount: 100, image: require("../img/omg.png") })
-    .set(Token.ZRX, { code: Token.ZRX, digits: 18, address: "0x6EB628dCeFA95802899aD3A9EE0C7650Ac63d543", amount: 400, image: require("../img/zrx.png") });
+    // .set(Token.DGX, { code: Token.DGX, digits: 9, address: "0x7d6D31326b12B6CBd7f054231D47CbcD16082b71", amount: 20, image: require("../img/dgx.png") })
+    // .set(Token.TUSD, { code: Token.TUSD, digits: 18, address: "0x525389752ffe6487d33EF53FBcD4E5D3AD7937a0", amount: 100, image: require("../img/tusd.png") })
+    // .set(Token.OMG, { code: Token.OMG, digits: 18, address: "0x66497ba75dD127b46316d806c077B06395918064", amount: 100, image: require("../img/omg.png") })
+    // .set(Token.ZRX, { code: Token.ZRX, digits: 18, address: "0x6EB628dCeFA95802899aD3A9EE0C7650Ac63d543", amount: 400, image: require("../img/zrx.png") })
+    ;
 
 const standardTokenABI = require("./abi/StandardToken.json").abi;
 
@@ -71,6 +86,7 @@ export const getERC20Contract = (web3: Web3, address: string): Contract => {
 };
 
 export const sendTokens = async (
+    // TOKENS: TOKENS,
     account: string, web3: Web3,
     sendETH: boolean, sendREN: boolean, sendTOK: boolean,
     recipient: string, addMessage: (msg: Message) => void
@@ -79,10 +95,10 @@ export const sendTokens = async (
 
     if (sendETH) {
         web3.eth.sendTransaction({
-            gasPrice: web3.utils.toHex(1000000000),
+            // gasPrice: web3.utils.toHex(1000000000),
             from: account,
             to: recipient,
-            value: 2000000000000000000,
+            value: 200000000000000000,
             nonce: web3.utils.toHex(nonce)
         }).on("transactionHash", (transactionHash: string) => {
             addMessage({
@@ -112,11 +128,11 @@ export const sendTokens = async (
     }
 
     if (sendTOK) {
-        toSend = toSend
-            .push(Token.DGX)
-            .push(Token.TUSD)
-            .push(Token.OMG)
-            .push(Token.ZRX);
+        // toSend = toSend
+        //     .push(Token.DGX)
+        //     .push(Token.TUSD)
+        //     .push(Token.OMG)
+        //     .push(Token.ZRX);
     }
     for (const tokenSymbol of toSend.toArray()) {
         const tokenDetails = TOKENS.get(tokenSymbol);
@@ -126,7 +142,7 @@ export const sendTokens = async (
         const value = new BigNumber(tokenDetails.amount).multipliedBy(new BigNumber(10).pow(tokenDetails.digits));
         erc20.methods.transfer(recipient, value).send({
             nonce: web3.utils.toHex(nonce),
-            gasPrice: web3.utils.toHex(1000000000),
+            // gasPrice: web3.utils.toHex(1000000000),
             from: account,
         }).on("transactionHash", (tx: string) => {
             console.log(tx);
@@ -154,12 +170,18 @@ export const sendTokens = async (
 export const DEFAULT_BALANCES = OrderedMap<string, BigNumber>()
     .set(Token.ETH, new BigNumber(0))
     .set(Token.REN, new BigNumber(0))
-    .set(Token.DGX, new BigNumber(0))
-    .set(Token.TUSD, new BigNumber(0))
-    .set(Token.OMG, new BigNumber(0))
-    .set(Token.ZRX, new BigNumber(0));
+    // .set(Token.DGX, new BigNumber(0))
+    // .set(Token.TUSD, new BigNumber(0))
+    // .set(Token.OMG, new BigNumber(0))
+    // .set(Token.ZRX, new BigNumber(0))
+    ;
 
-export const updateBalances = async (web3: Web3, account: string): Promise<OrderedMap<string, BigNumber>> => {
+export const updateBalances = async (
+    web3: Web3, account: string,
+    // TOKENS: TOKENS,
+    // web3: Web3,
+    // account: string,
+): Promise<OrderedMap<string, BigNumber>> => {
 
     let balances = DEFAULT_BALANCES;
 
