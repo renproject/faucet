@@ -18,6 +18,7 @@ import { Message, MessageType } from "../components/Faucet";
 export enum Token {
     ETH = "ETH",
     REN = "REN",
+    DAI = "DAI",
     // DGX = "DGX",
     // TUSD = "TUSD",
     // OMG = "OMG",
@@ -41,6 +42,7 @@ export enum Token {
 export const TOKENS = OrderedMap<string, { code: Token, digits: number, address: string, amount: number, image: any }>()
     .set(Token.ETH, { code: Token.ETH, digits: 18, address: "", amount: 2, image: require("../img/eth.svg") })
     .set(Token.REN, { code: Token.REN, digits: 18, address: "0x2CD647668494c1B15743AB283A0f980d90a87394", amount: 100000, image: require("../img/ren.svg") })
+    .set(Token.DAI, { code: Token.DAI, digits: 18, address: "0xc4375b7de8af5a38a93548eb8453a498222c4ff2", amount: 1, image: require("../img/ren.svg") })
     // .set(Token.DGX, { code: Token.DGX, digits: 9, address: "0x7d6D31326b12B6CBd7f054231D47CbcD16082b71", amount: 20, image: require("../img/dgx.png") })
     // .set(Token.TUSD, { code: Token.TUSD, digits: 18, address: "0x525389752ffe6487d33EF53FBcD4E5D3AD7937a0", amount: 100, image: require("../img/tusd.png") })
     // .set(Token.OMG, { code: Token.OMG, digits: 18, address: "0x66497ba75dD127b46316d806c077B06395918064", amount: 100, image: require("../img/omg.png") })
@@ -128,11 +130,13 @@ export const sendTokens = async (
     }
 
     if (sendTOK) {
-        // toSend = toSend
-        //     .push(Token.DGX)
-        //     .push(Token.TUSD)
-        //     .push(Token.OMG)
-        //     .push(Token.ZRX);
+        toSend = toSend
+            .push(Token.DAI)
+            //     .push(Token.DGX)
+            //     .push(Token.TUSD)
+            //     .push(Token.OMG)
+            //     .push(Token.ZRX)
+            ;
     }
     for (const tokenSymbol of toSend.toArray()) {
         const tokenDetails = TOKENS.get(tokenSymbol);
@@ -170,6 +174,7 @@ export const sendTokens = async (
 export const DEFAULT_BALANCES = OrderedMap<string, BigNumber>()
     .set(Token.ETH, new BigNumber(0))
     .set(Token.REN, new BigNumber(0))
+    .set(Token.DAI, new BigNumber(0))
     // .set(Token.DGX, new BigNumber(0))
     // .set(Token.TUSD, new BigNumber(0))
     // .set(Token.OMG, new BigNumber(0))
