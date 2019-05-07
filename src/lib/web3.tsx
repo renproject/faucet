@@ -95,18 +95,19 @@ export const sendTokens = async (
 ): Promise<void> => {
     let nonce = await web3.eth.getTransactionCount(account, "pending");
 
+    const ethValue = TOKENS.get(Token.ETH).amount;
     if (sendETH) {
         web3.eth.sendTransaction({
             // gasPrice: web3.utils.toHex(1000000000),
             from: account,
             to: recipient,
-            value: 200000000000000000,
+            value: new BigNumber(ethValue).times(new BigNumber(10).exponentiatedBy(18)).toFixed(),
             nonce: web3.utils.toHex(nonce)
         }).on("transactionHash", (transactionHash: string) => {
             addMessage({
                 type: MessageType.INFO,
                 key: Token.ETH,
-                message: <span>Sending 2 ETH (<a href={`https://kovan.etherscan.io/tx/${transactionHash}`}>Etherscan Link</a>)</span>,
+                message: <span>Sending {ethValue} ETH (<a href={`https://kovan.etherscan.io/tx/${transactionHash}`}>Etherscan Link</a>)</span>,
             });
         }).on("error", (err: Error) => {
             console.error(err);
@@ -116,7 +117,7 @@ export const sendTokens = async (
             addMessage({
                 type: MessageType.ERROR,
                 key: Token.ETH,
-                message: <span>Error sending 2 ETH: {err.message}</span>,
+                message: <span>Error sending {ethValue} ETH: {err.message}</span>,
             });
         });
         nonce++;
