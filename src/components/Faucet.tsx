@@ -54,9 +54,9 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             // TOKENS: null,
 
             recipient: "",
-            sendETH: true,
-            sendREN: true,
-            sendTOK: true,
+            sendETH: false,
+            sendREN: false,
+            sendTOK: false,
             disabled: false,
 
             messages: List(),

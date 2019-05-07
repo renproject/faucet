@@ -164,7 +164,7 @@ input[type=text]:disabled {
   z-index: 1;
   width: 1rem;
   height: 1rem;
-  border: 2px solid #f2f2f2;
+  border: 2px solid #aaa;
 }
 
 .checkbox:checked:before {
