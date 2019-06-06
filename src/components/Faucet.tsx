@@ -2,9 +2,9 @@ import * as React from "react";
 
 import { List, OrderedMap } from "immutable";
 import { Redirect } from "react-router";
-
 import BigNumber from "bignumber.js";
 import Web3 from "web3";
+
 import { checkAddress } from "../lib/blacklist";
 import { DEFAULT_BALANCES, getWeb3, sendTokens, TOKENS, updateBalances } from "../lib/web3";
 import Loading from "./Loading";
@@ -46,7 +46,7 @@ interface FaucetProps {
 }
 
 class Faucet extends React.Component<FaucetProps, FaucetState> {
-    private timeout: NodeJS.Timer;
+    private timeout: NodeJS.Timer | undefined;
 
     constructor(props: FaucetProps, context: object) {
         super(props, context);
@@ -82,14 +82,14 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             // this.setState({ balances: await updateBalances(TOKENS, web3, ADDRESS) });
             this.setState({ balances: await updateBalances(web3, ADDRESS) });
             this.setState({ balancesLoading: false });
-            clearTimeout(this.timeout);
+            if (this.timeout) { clearTimeout(this.timeout); }
             this.timeout = setTimeout(loop, 30 * 1000);
         };
         loop();
     }
 
     public componentWillUnmount() {
-        clearTimeout(this.timeout);
+        if (this.timeout) { clearTimeout(this.timeout); }
     }
 
     public render() {
@@ -104,7 +104,10 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
                 <div className="Faucet">
                     <div className="Faucet-balances">
                         {balancesLoading ? <div className="Faucet-balances-loading"><Loading /></div> : null}
-                        {balances.map((value: BigNumber, key: string) => {
+                        {balances.map((value: BigNumber | undefined, key: string | undefined) => {
+                            if (!value || !key) {
+                                return <></>;
+                            }
                             return <p key={key}><img className="Faucet-balances-icon" src={TOKENS.get(key).image} />{value.toFixed()} {key} <span className="lighter">({value.div(TOKENS.get(key).amount).integerValue().toFixed()})</span></p>;
                         }).toArray()}
                     </div>
@@ -123,7 +126,10 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
                             disabled={disabled || !(sendETH || sendREN || sendTOK)}
                         />
                     </form>
-                    {messages.map((msg: Message) => {
+                    {messages.map((msg: Message | undefined) => {
+                        if (!msg) {
+                            return <></>;
+                        }
                         return <div key={msg.key} className={`message message-${msg.type}`}>
                             <p>{msg.message}</p>
                         </div>;

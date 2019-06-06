@@ -1,13 +1,12 @@
 import * as React from "react";
 
 import axios from "axios";
-
 import { HashRouter, Route } from "react-router-dom";
 
+import "../styles/App.css";
+import { ReactComponent as Home } from "../styles/home.svg";
 import Faucet from "./Faucet";
 import Unlock from "./Unlock";
-
-import "../styles/App.css";
 
 const commitHash = require("../commitHash.json");
 
@@ -37,8 +36,7 @@ class App extends React.Component<AppProps, AppState> {
         try {
             using = commitHash.HASH;
             latest = (await axios.get(`./commitHash.json?v=${Math.random().toString(36).substring(7)}`)).data.HASH;
-            console.log(latest);
-            console.log(using);
+            console.log(`latest hash: ${latest}, using hash: ${using}`);
             if (using !== latest) {
                 this.setState({ outOfDate: true });
             }
@@ -64,6 +62,9 @@ class App extends React.Component<AppProps, AppState> {
             <div className="App">
                 <HashRouter>
                     <div className="app">
+                        <a style={{ position: "absolute", top: "20px", left: "20px" }} className="home-link" href="https://republicprotocol.github.io/tool-index/">
+                            <Home style={{ height: "30px", width: "30px" }} />
+                        </a>
                         <Route path="/blacklisted" render={() => <Unlock blacklist={true} />} />
                         <Route path="/" exact render={main} />
                     </div>

@@ -1,7 +1,11 @@
 // tslint:disable
 
-import { Tx, TransactionReceipt, Log } from "web3/types";
+// import { Tx, TransactionReceipt, Log } from "web3/types";
 import { BN } from "bn.js";
+
+type Tx = any;
+type TransactionReceipt = any;
+type Log = any;
 
 type BigNumber = BN | string;
 

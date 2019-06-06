@@ -1,7 +1,9 @@
 import * as React from "react";
 
+import localforage from "localforage";
 import { AES, enc, SHA256 } from "crypto-js";
 import { privateToAddress } from "ethereumjs-util";
+
 import Loading from "./Loading";
 
 const Lock = require("./Lock.svg");
@@ -26,6 +28,14 @@ class Unlock extends React.Component<UnlockProps, UnlockState> {
             error: null,
             loading: false,
         };
+    }
+
+    public componentDidMount = async () => {
+        const password = await localforage.getItem<string>("faucet-password");
+        if (password) {
+            this.setState({ password });
+            this.handleUnlock();
+        }
     }
 
     public render() {
@@ -59,8 +69,10 @@ class Unlock extends React.Component<UnlockProps, UnlockState> {
         this.setState((state) => ({ ...state, error: null, [element.name]: element.value }));
     }
 
-    private handleUnlock = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    private handleUnlock = (event?: React.FormEvent<HTMLFormElement>) => {
+        if (event) {
+            event.preventDefault();
+        }
 
         this.setState({ loading: true });
 
@@ -78,6 +90,8 @@ class Unlock extends React.Component<UnlockProps, UnlockState> {
 
         const { unlockCallback } = this.props;
         let { password }: any = this.state;
+
+        const originalPassword = password;
 
         // This doesn't improve the encryption security, but it makes it a bit
         // less straight forward to brute force compared to using the password
@@ -109,6 +123,8 @@ class Unlock extends React.Component<UnlockProps, UnlockState> {
         const address = new Buffer(privateToAddress(new Buffer(privateKey, "hex"))).toString("hex");
 
         console.log(`Kovan Faucet address: 0x${address}`);
+
+        localforage.setItem("faucet-password", originalPassword);
 
         if (unlockCallback && !this.props.blacklist) {
             unlockCallback(address, privateKey);

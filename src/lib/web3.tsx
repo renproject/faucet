@@ -1,18 +1,15 @@
+import * as ethereumjsWallet from "ethereumjs-wallet";
 import * as React from "react";
 
 import Web3 from "web3";
-
 import { List, OrderedMap } from "immutable";
-
-import * as ethereumjsWallet from "ethereumjs-wallet";
 import WalletSubprovider from "ethereumjs-wallet/provider-engine";
 import ProviderEngine from "web3-provider-engine";
 import FetchSubprovider from "web3-provider-engine/subproviders/fetch";
 import NonceSubprovider from "web3-provider-engine/subproviders/nonce-tracker";
-
 import BigNumber from "bignumber.js";
 
-import { Contract } from "web3/types";
+// import { Contract } from "web3/types";
 import { Message, MessageType } from "../components/Faucet";
 
 export enum Token {
@@ -74,7 +71,7 @@ export const getWeb3 = (privateKey: string) => {
 //     // return getWeb3();
 // };
 
-export const getERC20Contract = (web3: Web3, address: string): Contract => {
+export const getERC20Contract = (web3: Web3, address: string): any => {
     // const nodePoolContract = contract({
     //     abi: standardTokenABI,
     // });
@@ -102,7 +99,7 @@ export const sendTokens = async (
             from: account,
             to: recipient,
             value: new BigNumber(ethValue).times(new BigNumber(10).exponentiatedBy(18)).toFixed(),
-            nonce: web3.utils.toHex(nonce)
+            nonce
         }).on("transactionHash", (transactionHash: string) => {
             addMessage({
                 type: MessageType.INFO,
