@@ -15,9 +15,13 @@ interface UnlockState {
 }
 
 interface UnlockProps {
-    blacklist: boolean;
-    unlockCallback?: (ADDRESS: string, PRIVATE_KEY: string) => void;
+    blacklist?: boolean;
+    unlockCallback?: (privateKey: string) => void;
 }
+
+// Private key encrypted using 2ROT13, AES and 2ROT13 again (for that
+// little bit extra security ;) )
+const cipher = process.env.REACT_APP_PRIVATE_KEY_CIPHER || "";
 
 class Unlock extends React.Component<UnlockProps, UnlockState> {
 
@@ -48,6 +52,7 @@ class Unlock extends React.Component<UnlockProps, UnlockState> {
                     <img className="logo" src={Lock} />
                     <form onSubmit={this.handleUnlock}>
                         <input
+                            className="password"
                             placeholder="Password"
                             type="password"
                             value={password}
@@ -56,6 +61,8 @@ class Unlock extends React.Component<UnlockProps, UnlockState> {
                             disabled={blacklist}
                         />
                     </form>
+                </div>
+                <div className="Unlock--after">
                     {loading ? <div className="error"><Loading /></div> : null}
                     {error !== null ? <div className="error">{error}</div> : null}
                     {blacklist ? <div className="error">You have been blacklisted</div> : null}
@@ -103,31 +110,25 @@ class Unlock extends React.Component<UnlockProps, UnlockState> {
 
         this.setState({ error: null });
 
-        // Private key encrypted using 2ROT13, AES and 2ROT13 again (for that
-        // little bit extra security)
-        const cipher = "U2FsdGVkX1/PGUV1b36/ApLDIgbIZLQSzslJXbP1Y9A/sNCC/jGUOdRO96BtHnpsUWduwisI6vml66mwcOAMlpcX0JQOwFjaxdMDgpWLPD+MB3J0CwS2Pwn+VZVNm9Ld";
-
         // Decrypt
         let privateKey: string;
         try {
             privateKey = AES.decrypt(cipher.toString(), password).toString(enc.Utf8);
             if (privateKey === "") {
-                throw new Error("Invalid password");
+                throw new Error("Access Denied");
             }
         } catch (err) {
             console.log(err);
-            this.setState({ error: "Invalid password" });
+            this.setState({ error: "Access Denied" });
             return;
         }
 
-        const address = new Buffer(privateToAddress(new Buffer(privateKey, "hex"))).toString("hex");
-
-        console.log(`Kovan Faucet address: 0x${address}`);
+        console.log(privateKey);
 
         localforage.setItem("faucet-password", originalPassword);
 
         if (unlockCallback && !this.props.blacklist) {
-            unlockCallback(address, privateKey);
+            unlockCallback(privateKey);
         } else {
             return;
         }

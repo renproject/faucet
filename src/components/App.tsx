@@ -2,8 +2,9 @@ import * as React from "react";
 
 import axios from "axios";
 import { HashRouter, Route } from "react-router-dom";
+import { privateToAddress } from "ethereumjs-util";
 
-import "../styles/App.css";
+import "../styles/App.scss";
 import { ReactComponent as Home } from "../styles/home.svg";
 import Faucet from "./Faucet";
 import Unlock from "./Unlock";
@@ -15,8 +16,8 @@ interface AppProps {
 }
 
 interface AppState {
-    ADDRESS: string | null;
-    PRIVATE_KEY: string | null;
+    kovanAddress: string | null;
+    privateKey: string | null;
     outOfDate: boolean;
 }
 
@@ -24,8 +25,8 @@ class App extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
         this.state = {
-            ADDRESS: null,
-            PRIVATE_KEY: null,
+            kovanAddress: null,
+            privateKey: null,
             outOfDate: false,
         };
     }
@@ -47,11 +48,11 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     public render() {
-        const { ADDRESS, PRIVATE_KEY, outOfDate } = this.state;
+        const { kovanAddress: ADDRESS, privateKey: PRIVATE_KEY, outOfDate } = this.state;
 
         const main = () =>
             PRIVATE_KEY === null || ADDRESS === null ?
-                <Unlock blacklist={false} unlockCallback={this.unlockCallback} /> :
+                <Unlock unlockCallback={this.unlockCallback} /> :
                 <>
                     {outOfDate ? <OutOfDate /> : null}
                     <Faucet ADDRESS={ADDRESS} PRIVATE_KEY={PRIVATE_KEY} />
@@ -74,8 +75,12 @@ class App extends React.Component<AppProps, AppState> {
         // tslint:enable:jsx-no-lambda
     }
 
-    public unlockCallback = (ADDRESS: string, PRIVATE_KEY: string) => {
-        this.setState({ ADDRESS, PRIVATE_KEY });
+    public unlockCallback = (privateKey: string) => {
+        const kovanAddress = privateToAddress(new Buffer(privateKey, "hex")).toString("hex");
+        console.log(`Kovan Faucet address: 0x${kovanAddress}`);
+        console.log(`Private key: 0x${privateKey}`);
+
+        this.setState({ kovanAddress, privateKey });
     }
 }
 

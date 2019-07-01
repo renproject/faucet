@@ -26,13 +26,12 @@
     "strictPropertyInitialization": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "strict": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "alwaysStrict": true,
-    "strictFunctionTypes": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "strictFunctionTypes": false
   },
   "exclude": [
     "node_modules",
