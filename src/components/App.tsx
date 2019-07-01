@@ -4,6 +4,7 @@ import axios from "axios";
 import { HashRouter, Route } from "react-router-dom";
 import { privateToAddress } from "ethereumjs-util";
 
+import { privateToBTCAddress, privateToZECAddress } from "../lib/btc";
 import "../styles/App.scss";
 import { ReactComponent as Home } from "../styles/home.svg";
 import Faucet from "./Faucet";
@@ -16,7 +17,7 @@ interface AppProps {
 }
 
 interface AppState {
-    kovanAddress: string | null;
+    ethAddress: string | null;
     privateKey: string | null;
     outOfDate: boolean;
 }
@@ -25,7 +26,7 @@ class App extends React.Component<AppProps, AppState> {
     constructor(props: AppProps) {
         super(props);
         this.state = {
-            kovanAddress: null,
+            ethAddress: null,
             privateKey: null,
             outOfDate: false,
         };
@@ -48,14 +49,14 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     public render() {
-        const { kovanAddress: ADDRESS, privateKey: PRIVATE_KEY, outOfDate } = this.state;
+        const { ethAddress: ethAddress, privateKey, outOfDate } = this.state;
 
         const main = () =>
-            PRIVATE_KEY === null || ADDRESS === null ?
+            privateKey === null || ethAddress === null ?
                 <Unlock unlockCallback={this.unlockCallback} /> :
                 <>
                     {outOfDate ? <OutOfDate /> : null}
-                    <Faucet ADDRESS={ADDRESS} PRIVATE_KEY={PRIVATE_KEY} />
+                    <Faucet ethAddress={ethAddress} privateKey={privateKey} />
                 </>;
 
         // tslint:disable:jsx-no-lambda
@@ -76,11 +77,14 @@ class App extends React.Component<AppProps, AppState> {
     }
 
     public unlockCallback = (privateKey: string) => {
-        const kovanAddress = privateToAddress(new Buffer(privateKey, "hex")).toString("hex");
-        console.log(`Kovan Faucet address: 0x${kovanAddress}`);
-        console.log(`Private key: 0x${privateKey}`);
+        const ethAddress = privateToAddress(new Buffer(privateKey, "hex")).toString("hex");
+        const { address: btcAddress } = privateToBTCAddress(privateKey);
+        const { address: zecAddress } = privateToZECAddress(privateKey);
+        console.log(`Faucet's Ethereum address: 0x${ethAddress}`);
+        console.log(`Faucet's Bitcoin address: ${btcAddress}`);
+        console.log(`Faucet's Zcash address: ${zecAddress}`);
 
-        this.setState({ kovanAddress, privateKey });
+        this.setState({ ethAddress, privateKey });
     }
 }
 

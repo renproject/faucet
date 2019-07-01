@@ -118,12 +118,10 @@ class Unlock extends React.Component<UnlockProps, UnlockState> {
                 throw new Error("Access Denied");
             }
         } catch (err) {
-            console.log(err);
+            console.error(err);
             this.setState({ error: "Access Denied" });
             return;
         }
-
-        console.log(privateKey);
 
         localforage.setItem("faucet-password", originalPassword);
 

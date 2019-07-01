@@ -1,16 +1,13 @@
 import * as React from "react";
 
-import Select from "react-select";
 import { List, OrderedMap } from "immutable";
 import { Redirect } from "react-router";
 import BigNumber from "bignumber.js";
 import Web3 from "web3";
 import AutosizeInput from "react-input-autosize";
-import { symbol } from "prop-types";
 
 import { checkAddress } from "../lib/blacklist";
 import { getWeb3, sendTokens, Token, TokenDetails, TOKENS } from "../lib/web3";
-import Loading from "./Loading";
 import { SelectToken } from "./selectToken/SelectToken";
 
 export enum MessageType {
@@ -49,16 +46,9 @@ interface SelectOption {
 }
 
 interface FaucetProps {
-    PRIVATE_KEY: string;
-    ADDRESS: string;
+    privateKey: string;
+    ethAddress: string;
 }
-
-export const TokenOptions = new Map<string, { symbol: string; }>()
-    .set("ETH", { symbol: "ETH", })
-    .set("DAI", { symbol: "DAI", })
-    .set("REN", { symbol: "REN", })
-    .set("BTC", { symbol: "BTC", })
-    ;
 
 class Faucet extends React.Component<FaucetProps, FaucetState> {
     private timeout: NodeJS.Timer | undefined;
@@ -77,7 +67,7 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             balances: OrderedMap<string, BigNumber>(),
             balancesLoading: true,
 
-            web3: getWeb3(props.PRIVATE_KEY),
+            web3: getWeb3(props.privateKey),
 
             blacklisted: false,
 
@@ -86,7 +76,7 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
     }
 
     public async componentDidMount() {
-        const { ADDRESS } = this.props;
+        const { ethAddress, privateKey } = this.props;
         const { web3 } = this.state;
 
         // const TOKENS = await getTokens();
@@ -96,7 +86,7 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             this.setState({ balancesLoading: true });
 
             for (const token of TOKENS.toArray()) {
-                this.setState({ balances: this.state.balances.set(token.code, await token.getBalance(web3, ADDRESS, token)) });
+                this.setState({ balances: this.state.balances.set(token.code, await token.getBalance(web3, ethAddress, privateKey, token)) });
             }
 
             this.setState({ balancesLoading: false });
@@ -153,11 +143,6 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
         this.setState({ messages: messages.push(msg) });
     }
 
-    private handleCheck = (event: React.FormEvent<HTMLInputElement>): void => {
-        const element = (event.target as HTMLInputElement);
-        this.setState((state) => ({ ...state, [element.name]: !this.state[element.name] }));
-    }
-
     private handleSelect = (selectedToken: string): void => {
         this.setState({ selectedToken });
     };
@@ -169,11 +154,12 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
 
     private handleFaucet = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const { ADDRESS } = this.props;
+        const { ethAddress, privateKey } = this.props;
         const { recipient, web3, selectedToken, value, submitting } = this.state;
         if (!selectedToken || recipient === "" || value === "" || submitting) {
             return;
         }
+
         try {
             checkAddress(recipient);
         } catch (err) {
@@ -181,9 +167,8 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             return;
         }
         this.setState({ submitting: true, messages: List() });
-        console.log(`Setting submitting to true!`);
         try {
-            await sendTokens(ADDRESS, web3, selectedToken as Token, recipient, value, this.addMessage);
+            await sendTokens(ethAddress, web3, privateKey, selectedToken as Token, recipient, value, this.addMessage);
         } catch (err) {
             console.error(err);
             this.addMessage({
@@ -192,7 +177,6 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
                 message: err.message,
             });
         }
-        console.log(`Setting submitting to false!`);
         this.setState({ submitting: false });
     }
 }

@@ -11,14 +11,19 @@ import BigNumber from "bignumber.js";
 
 // import { Contract } from "web3/types";
 import { Message, MessageType } from "../components/Faucet";
-import { ReactComponent as DAI } from "../img/dai.svg";
-import { ReactComponent as ETH } from "../img/eth.svg";
-import { ReactComponent as REN } from "../img/ren.svg";
+import { ReactComponent as iconBTC } from "../img/btc.svg";
+import { ReactComponent as iconDAI } from "../img/dai.svg";
+import { ReactComponent as iconETH } from "../img/eth.svg";
+import { ReactComponent as iconREN } from "../img/ren.svg";
+import { ReactComponent as iconZEC } from "../img/zec.svg";
+import { sumBTCBalance, sumZECBalance, transferBTC, transferZEC } from "./btc";
 
 export enum Token {
     ETH = "ETH",
     REN = "REN",
     DAI = "DAI",
+    BTC = "BTC",
+    ZEC = "ZEC",
 }
 
 export interface TokenDetails {
@@ -26,15 +31,23 @@ export interface TokenDetails {
     digits: number;
     address: string;
     image: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-    getBalance: (web3: Web3, account: string, token: TokenDetails) => Promise<BigNumber>,
-    transfer: (token: Token, web3: Web3, recipient: string, amount: string, addMessage: (msg: Message) => void, from: string) => Promise<void>,
+    getBalance: (web3: Web3, account: string, privateKey: string, token: TokenDetails) => Promise<BigNumber>,
+    transfer: (token: Token, web3: Web3, privateKey: string, recipient: string, amount: string, addMessage: (msg: Message) => void, from: string) => Promise<void>,
 }
 
-const getETHBalance = async (web3: Web3, account: string, token: TokenDetails): Promise<BigNumber> => {
+const getETHBalance = async (web3: Web3, account: string, privateKey: string, token: TokenDetails): Promise<BigNumber> => {
     return new BigNumber(await web3.eth.getBalance(account)).div(new BigNumber(10).pow(token.digits));
 }
 
-const getERC20Balance = async (web3: Web3, account: string, token: TokenDetails) => {
+const getBTCBalance = async (web3: Web3, account: string, privateKey: string, token: TokenDetails): Promise<BigNumber> => {
+    return sumBTCBalance(privateKey);
+}
+
+const getZECBalance = async (web3: Web3, account: string, privateKey: string, token: TokenDetails): Promise<BigNumber> => {
+    return sumZECBalance(privateKey);
+}
+
+const getERC20Balance = async (web3: Web3, account: string, privateKey: string, token: TokenDetails) => {
     const erc20 = await getERC20Contract(web3, token.address);
     return new BigNumber(await erc20.methods.balanceOf(account).call()).div(new BigNumber(10).pow(token.digits));
 }
@@ -64,13 +77,18 @@ const onError = (addMessage: (msg: Message) => void, token: string) => (err: Err
     });
 }
 
-const sendETH = async (token: Token, web3: Web3, recipient: string, amount: string, addMessage: (msg: Message) => void, from: string): Promise<void> => {
+const shiftValue = (token: Token, amount: string): BigNumber => {
+    const tokenDetails = TOKENS.get(token);
+    return new BigNumber(amount).multipliedBy(new BigNumber(10).pow(tokenDetails.digits));
+}
+
+const sendETH = async (token: Token, web3: Web3, privateKey: string, recipient: string, amount: string, addMessage: (msg: Message) => void, from: string): Promise<void> => {
     try {
         const hash = await new Promise<string>((resolve, reject) => {
             web3.eth.sendTransaction({
                 from,
                 to: recipient,
-                value: new BigNumber(amount).times(new BigNumber(10).exponentiatedBy(18)).toFixed(),
+                value: shiftValue(token, amount),
             })
                 .on("transactionHash", resolve)
                 .on("error", reject);
@@ -81,14 +99,39 @@ const sendETH = async (token: Token, web3: Web3, recipient: string, amount: stri
     }
 }
 
-const sendERC20Token = async (token: Token, web3: Web3, recipient: string, amount: string, addMessage: (msg: Message) => void, from: string) => {
+const sendZEC = async (token: Token, web3: Web3, privateKey: string, recipient: string, amount: string, addMessage: (msg: Message) => void, from: string): Promise<void> => {
+    try {
+        const txHash = await transferZEC(privateKey, recipient, shiftValue(token, amount));
+        addMessage({
+            type: MessageType.INFO,
+            key: Token.ZEC,
+            message: <span>Sending {amount} {token} (<a href={`https://chain.so/tx/ZECTEST/${txHash}`}>Explorer link</a>)</span>,
+        });
+    } catch (error) {
+        onError(addMessage, Token.ZEC)(error);
+    }
+}
+
+const sendBTC = async (token: Token, web3: Web3, privateKey: string, recipient: string, amount: string, addMessage: (msg: Message) => void, from: string): Promise<void> => {
+    try {
+        const txHash = await transferBTC(privateKey, recipient, shiftValue(token, amount));
+        addMessage({
+            type: MessageType.INFO,
+            key: Token.BTC,
+            // message: <span>Sending {amount} {token} (<a href={`https://tbtc.bitaps.com/${txHash}`}>Explorer link</a>)</span>,
+            message: <span>Sending {amount} {token} (<a href={`https://chain.so/tx/BTCTEST/${txHash}`}>Explorer link</a>)</span>,
+        });
+    } catch (error) {
+        onError(addMessage, Token.BTC)(error);
+    }
+}
+
+const sendERC20Token = async (token: Token, web3: Web3, privateKey: string, recipient: string, amount: string, addMessage: (msg: Message) => void, from: string) => {
     const tokenDetails = TOKENS.get(token);
     try {
         const erc20 = await getERC20Contract(web3, tokenDetails.address);
-
-        const value = new BigNumber(amount).multipliedBy(new BigNumber(10).pow(tokenDetails.digits));
         const hash = await new Promise<string>((resolve, reject) => {
-            erc20.methods.transfer(recipient, value.toFixed()).send({
+            erc20.methods.transfer(recipient, shiftValue(token, amount).toFixed()).send({
                 from,
             })
                 .on("transactionHash", resolve)
@@ -101,16 +144,18 @@ const sendERC20Token = async (token: Token, web3: Web3, recipient: string, amoun
 }
 
 export const TOKENS = OrderedMap<string, TokenDetails>()
-    .set(Token.ETH, { code: Token.ETH, digits: 18, address: "", image: ETH, getBalance: getETHBalance, transfer: sendETH, })
-    .set(Token.REN, { code: Token.REN, digits: 18, address: "0x2CD647668494c1B15743AB283A0f980d90a87394", image: REN, getBalance: getERC20Balance, transfer: sendERC20Token })
-    .set(Token.DAI, { code: Token.DAI, digits: 18, address: "0xc4375b7de8af5a38a93548eb8453a498222c4ff2", image: DAI, getBalance: getERC20Balance, transfer: sendERC20Token })
+    .set(Token.ETH, { code: Token.ETH, digits: 18, address: "", image: iconETH, getBalance: getETHBalance, transfer: sendETH, })
+    .set(Token.REN, { code: Token.REN, digits: 18, address: "0x2CD647668494c1B15743AB283A0f980d90a87394", image: iconREN, getBalance: getERC20Balance, transfer: sendERC20Token })
+    .set(Token.DAI, { code: Token.DAI, digits: 18, address: "0xc4375b7de8af5a38a93548eb8453a498222c4ff2", image: iconDAI, getBalance: getERC20Balance, transfer: sendERC20Token })
+    .set(Token.BTC, { code: Token.BTC, digits: 8, address: "", image: iconBTC, getBalance: getBTCBalance, transfer: sendBTC })
+    // .set(Token.ZEC, { code: Token.ZEC, digits: 8, address: "", image: iconZEC, getBalance: getZECBalance, transfer: sendZEC })
     ;
 
 export const sendTokens = async (
-    account: string, web3: Web3, token: Token,
+    account: string, web3: Web3, privateKey: string, token: Token,
     recipient: string, amount: string, addMessage: (msg: Message) => void
 ): Promise<void> => {
-    await TOKENS.get(token).transfer(token, web3, recipient, amount, addMessage, account);
+    await TOKENS.get(token).transfer(token, web3, privateKey, recipient, amount, addMessage, account);
 };
 
 export const getWeb3 = (privateKey: string) => {
