@@ -18,6 +18,13 @@ interface UTXO {
     output_no: number;
 }
 
+interface UTXO2 {
+    status: any,
+    txid: string,
+    value: number,
+    vout: number,
+}
+
 const chainSo = "https://chain.so/api/v2";
 
 enum ChainSoNetwork {
@@ -27,16 +34,35 @@ enum ChainSoNetwork {
 
 type utxoFn = (address: string, confirmations: number) => Promise<UTXO[]>;
 const getUTXOs = (endpoint: string, network: string): utxoFn => async (address: string, confirmations: number): Promise<UTXO[]> => {
-    const resp = await Axios.get<UTXO[]>(`${endpoint}/get_tx_unspent/${network}/${address}/${confirmations}`);
-    // tslint:disable-next-line:no-any
-    const data = (resp.data as any);
-
-    // Convert value to Satoshi
-    for (const [, tx] of Object.entries(data.data.txs)) {
+    try {
+        const resp = await Axios.get<{ data: { txs: UTXO[] } }>(`${endpoint}/get_tx_unspent/${network}/${address}/${confirmations}`);
         // tslint:disable-next-line:no-any
-        (tx as any).value = new BigNumber((tx as any).value).multipliedBy(10 ** 8).toNumber(); // TODO: Use BN
+        const data = (resp.data);
+
+        // Convert value to Satoshi
+        for (const [, tx] of Object.entries(data.data.txs)) {
+            // tslint:disable-next-line:no-any
+            (tx as any).value = new BigNumber((tx as any).value).multipliedBy(10 ** 8).toNumber(); // TODO: Use BN
+        }
+        return data.data.txs;
+    } catch (error) {
+        console.error(error);
+        const response = await Axios.get<UTXO2[]>(`https://blockstream.info/testnet/api/address/${address}/utxo`);
+        let utxos = [];
+
+        for (const utxo of response.data) {
+            // const response = await Axios.get<UTXO2[]>(`https://blockstream.info/testnet/api/tx/${utxo.txid}`);
+            // console.log(response);
+            utxos.push({
+                txid: utxo.txid,
+                value: utxo.value,
+                script_hex: "76a914b0c08e3b7da084d7dbe9431e9e49fb61fb3b64d788ac",
+                output_no: utxo.vout,
+            });
+        }
+
+        return utxos;
     }
-    return data.data.txs;
 };
 
 export const privateToAddress = (Address: typeof BAddress | typeof ZAddress, network: typeof BNetworks.testnet | ZNetworks.Network) => (privateKeyIn: string) => {
@@ -93,9 +119,14 @@ export const transfer = (
             throw new Error(`Faucet has insufficient funds for amount plus transfer fees`);
         }
 
-        const transaction = new Transaction().from(bitcoreUTXOs).to(toAddress, amount.toNumber()).fee(0).change(new Address(address)).sign(privateKey);
+        const transaction = new Transaction().from(bitcoreUTXOs).to(toAddress, amount.toNumber()).fee(10000).change(new Address(address)).sign(privateKey);
 
-        await submitSTX(transaction);
+        try {
+            return await submitSTX(transaction);
+        } catch (error) {
+            console.log(transaction.toString());
+            throw error;
+        }
     }
 
 /** BTC ***********************************************************************/
@@ -105,11 +136,11 @@ export const privateToBTCAddress = privateToAddress(BAddress, BNetworks.testnet)
 export const sumBTCBalance = sumBalance(getBitcoinUTXOs, BAddress, BNetworks.testnet);
 const submitBTCSTX = async (transaction: BTransaction) => {
     try {
-        const response = await Axios.post<ChainSoSTX>(`${chainSo}/send_tx/${ChainSoNetwork.BTC}`, { tx_hex: transaction.toString() });
-        return response.data.data.txid;
-    } catch (error) {
         const response = await Axios.post<string>("https://blockstream.info/testnet/api/tx", transaction.toString());
         return response.data;
+    } catch (error) {
+        const response = await Axios.post<ChainSoSTX>(`${chainSo}/send_tx/${ChainSoNetwork.BTC}`, { tx_hex: transaction.toString() });
+        return response.data.data.txid;
     }
 }
 export const transferBTC = transfer(BTransaction, BAddress, BScript, BNetworks.testnet, getBitcoinUTXOs, submitBTCSTX);
