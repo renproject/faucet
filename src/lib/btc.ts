@@ -25,15 +25,15 @@ interface UTXO2 {
     vout: number,
 }
 
-const chainSo = "https://chain.so/api/v2";
+export const chainSo = "https://chain.so/api/v2";
 
-enum ChainSoNetwork {
+export enum ChainSoNetwork {
     BTC = "BTCTEST",
     ZEC = "ZECTEST",
 }
 
 type utxoFn = (address: string, confirmations: number) => Promise<UTXO[]>;
-const getUTXOs = (endpoint: string, network: string): utxoFn => async (address: string, confirmations: number): Promise<UTXO[]> => {
+export const getUTXOs = (endpoint: string, network: string): utxoFn => async (address: string, confirmations: number): Promise<UTXO[]> => {
     try {
         const resp = await Axios.get<{ data: { txs: UTXO[] } }>(`${endpoint}/get_tx_unspent/${network}/${address}/${confirmations}`);
         // tslint:disable-next-line:no-any
@@ -144,16 +144,3 @@ const submitBTCSTX = async (transaction: BTransaction) => {
     }
 }
 export const transferBTC = transfer(BTransaction, BAddress, BScript, BNetworks.testnet, getBitcoinUTXOs, submitBTCSTX);
-
-/** ZEC ***********************************************************************/
-
-const getZcashUTXOs = getUTXOs(chainSo, ChainSoNetwork.ZEC);
-export const privateToZECAddress = privateToAddress(ZAddress, ZNetworks.testnet);
-export const sumZECBalance = sumBalance(getZcashUTXOs, ZAddress, ZNetworks.testnet);
-
-const submitZECSTX = async (transaction: ZTransaction) => {
-    const response = await Axios.post<ChainSoSTX>(`${chainSo}/send_tx/${ChainSoNetwork.ZEC}`, { tx_hex: transaction.toString() });
-    return response.data.data.txid;
-}
-
-export const transferZEC = transfer(ZTransaction, ZAddress, ZScript, ZNetworks.testnet, getZcashUTXOs, submitZECSTX);

@@ -16,7 +16,8 @@ import { ReactComponent as iconDAI } from "../img/dai.svg";
 import { ReactComponent as iconETH } from "../img/eth.svg";
 import { ReactComponent as iconREN } from "../img/ren.svg";
 import { ReactComponent as iconZEC } from "../img/zec.svg";
-import { sumBTCBalance, sumZECBalance, transferBTC, transferZEC } from "./btc";
+import { sumBTCBalance, transferBTC } from "./btc";
+import { sumZECBalance, transferZEC } from "./zec";
 
 export enum Token {
     ETH = "ETH",
@@ -149,7 +150,7 @@ export const TOKENS = OrderedMap<string, TokenDetails>()
     .set(Token.REN, { code: Token.REN, digits: 18, address: "0x2CD647668494c1B15743AB283A0f980d90a87394", image: iconREN, getBalance: getERC20Balance, transfer: sendERC20Token })
     .set(Token.DAI, { code: Token.DAI, digits: 18, address: "0xc4375b7de8af5a38a93548eb8453a498222c4ff2", image: iconDAI, getBalance: getERC20Balance, transfer: sendERC20Token })
     .set(Token.BTC, { code: Token.BTC, digits: 8, address: "", image: iconBTC, getBalance: getBTCBalance, transfer: sendBTC })
-    // .set(Token.ZEC, { code: Token.ZEC, digits: 8, address: "", image: iconZEC, getBalance: getZECBalance, transfer: sendZEC })
+    .set(Token.ZEC, { code: Token.ZEC, digits: 8, address: "", image: iconZEC, getBalance: getZECBalance, transfer: sendZEC })
     ;
 
 export const sendTokens = async (

@@ -4,7 +4,8 @@ import axios from "axios";
 import { HashRouter, Route } from "react-router-dom";
 import { privateToAddress } from "ethereumjs-util";
 
-import { privateToBTCAddress, privateToZECAddress } from "../lib/btc";
+import { privateToBTCAddress } from "../lib/btc";
+import { privateToZECAddress } from "../lib/zec";
 import "../styles/App.scss";
 import { ReactComponent as Home } from "../styles/home.svg";
 import Faucet from "./Faucet";
