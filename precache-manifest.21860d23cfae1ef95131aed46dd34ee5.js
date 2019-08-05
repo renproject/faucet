@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "d7dd9b93c57097304b8f10eed02ccf38",
+    "revision": "79b9781d64f68081b8cf36fa82797933",
     "url": "/internal-faucet-js/index.html"
   },
   {
-    "revision": "0a082e56bd1d08a7cd80",
+    "revision": "9ddeeebe5bb41c1b4bf4",
     "url": "/internal-faucet-js/static/css/main.12d7fb6b.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/internal-faucet-js/static/js/2.b487fc24.chunk.js"
   },
   {
-    "revision": "0a082e56bd1d08a7cd80",
-    "url": "/internal-faucet-js/static/js/main.774935bf.chunk.js"
+    "revision": "9ddeeebe5bb41c1b4bf4",
+    "url": "/internal-faucet-js/static/js/main.5e75c66a.chunk.js"
   },
   {
     "revision": "96495dffca3f295e9cdc",
