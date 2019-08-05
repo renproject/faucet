@@ -85,10 +85,22 @@ export const transferZEC = async (rawPrivateKey: string, gatewayAddress: string,
     try {
         // Sign inputs
         utxos.map((utxo, i) => {
-            tx.sign(i, account, "", bitcoin.Transaction.SIGHASH_SINGLE, utxo.value);
+            console.log(i, account, bitcoin.Transaction.SIGHASH_SINGLE, utxo.value);
+            try {
+                tx.sign(i, account, "", bitcoin.Transaction.SIGHASH_SINGLE, utxo.value);
+            } catch (error) {
+                console.error(error);
+                throw error;
+            }
         });
 
-        const built = tx.build();
+        let built;
+        try {
+            built = tx.build();
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
 
         await sendRawTransaction(built.toHex(), "http://139.59.217.120:5000/zec/testnet", "ZECTEST");
     } catch (error) {
