@@ -43,92 +43,46 @@ export const sendRawTransaction = async (txHex: string, mercuryURL: string, chai
 // }
 
 export const transferZEC = async (rawPrivateKey: string, gatewayAddress: string, amountSatoshis: BigNumber) => {
-    let fees, tx: any, utxos, availableSatoshis, change, account: any;
+    console.log(`Please deposit ${amountSatoshis.div(new BigNumber(10).pow(8)).toFixed()} ZEC to ${gatewayAddress}`);
 
-    try {
-        console.log(`Please deposit ${amountSatoshis.div(new BigNumber(10).pow(8)).toFixed()} ZEC to ${gatewayAddress}`);
-    } catch (error) {
-        console.error(error);
-        throw error;
+    const privateKey = privateToZECAddress(rawPrivateKey).privateKey.toWIF();
+
+    // const alice = bitcoin.ECPair.fromPrivateKeyBuffer(Buffer.from(keyHex, "hex"), );
+    const account = bitcoin.ECPair.fromWIF(privateKey, bitcoin.networks.zcashTest);
+
+    const utxos = await getZcashUTXOs(account.getAddress().toString(), 0);
+
+    const fees = new BigNumber(10000);
+
+    const tx = new bitcoin.TransactionBuilder(bitcoin.networks.zcashTest);
+    tx.setVersion(bitcoin.Transaction.ZCASH_SAPLING_VERSION);  // 4
+    tx.setVersionGroupId(parseInt("0x892F2085", 16));
+
+    // Add up balance
+    const availableSatoshis = utxos.reduce((sum, utxo) => sum.plus(utxo.value), new BigNumber(0));
+
+    if (availableSatoshis.lt(amountSatoshis.plus(fees))) {
+        throw new Error("Insufficient balance to broadcast transaction");
     }
 
-    try {
+    const change = availableSatoshis.minus(amountSatoshis).minus(fees);
 
-        const privateKey = privateToZECAddress(rawPrivateKey).privateKey.toWIF();
+    // Add all inputs
+    utxos.map(utxo => {
+        tx.addInput(utxo.txid, utxo.output_no);
+    });
 
-        // const alice = bitcoin.ECPair.fromPrivateKeyBuffer(Buffer.from(keyHex, "hex"), );
-        account = bitcoin.ECPair.fromWIF(privateKey, bitcoin.networks.zcashTest);
-
-        utxos = await getZcashUTXOs(account.getAddress().toString(), 0);
-
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
+    // Add outputs
+    tx.addOutput(gatewayAddress, amountSatoshis.toNumber());
+    if (change.gt(0)) { tx.addOutput(account.getAddress(), change.toNumber()); }
 
     try {
-
-        fees = new BigNumber(10000);
-
-        tx = new bitcoin.TransactionBuilder(bitcoin.networks.zcashTest);
-        tx.setVersion(bitcoin.Transaction.ZCASH_SAPLING_VERSION);  // 4
-        tx.setVersionGroupId(parseInt("0x892F2085", 16));
-
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-
-    try {
-
-        // Add up balance
-        availableSatoshis = utxos.reduce((sum, utxo) => sum.plus(utxo.value), new BigNumber(0));
-
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-
-    try {
-
-        if (availableSatoshis.lt(amountSatoshis.plus(fees))) {
-            throw new Error("Insufficient balance to broadcast transaction");
-        }
-
-        change = availableSatoshis.minus(amountSatoshis).minus(fees);
-
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-
-    try {
-
-        // Add all inputs
-        utxos.map(utxo => {
-            tx.addInput(utxo.txid, utxo.output_no);
-        });
-
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-
-    try {
-
-        // Add outputs
-        tx.addOutput(gatewayAddress, amountSatoshis.toNumber());
-        if (change.gt(0)) { tx.addOutput(account.getAddress(), change.toNumber()); }
-
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-
-    try {
-
         console.log(`${chalk.magenta(`[INFO]`)} ${account.getAddress()} has ${chalk.magenta(`${change.div(new BigNumber(10).pow(8)).toFixed()}`)} tZEC remaining`);
+    } catch (error) {
+        console.error(error);
+    }
 
+    try {
         // Sign inputs
         utxos.map((utxo, i) => {
             tx.sign(i, account, "", bitcoin.Transaction.SIGHASH_SINGLE, utxo.value);
