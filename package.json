@@ -8,7 +8,7 @@
     "start": ". ./.env || true; npm run hash; react-scripts start",
     "build": ". ./.env || true; npm run hash; react-scripts build",
     "test": "npm run hash; react-scripts test --env=jsdom",
-    "eject": "npm run hash; react-scripts eject",
+    "eject": "react-scripts eject",
     "predeploy": "npm run hash; npm run build",
     "deploy": "npm run hash; gh-pages -d build"
   },
