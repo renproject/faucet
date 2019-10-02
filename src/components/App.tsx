@@ -65,7 +65,7 @@ class App extends React.Component<AppProps, AppState> {
             <div className="App">
                 <HashRouter>
                     <div className="app">
-                        <a style={{ position: "absolute", top: "20px", left: "20px" }} className="home-link" href="https://republicprotocol.github.io/tool-index/">
+                        <a style={{ position: "absolute", top: "20px", left: "20px" }} className="home-link" href="https://renproject.github.io/tool-index/">
                             <Home style={{ height: "30px", width: "30px" }} />
                         </a>
                         <Route path="/blacklisted" render={() => <Unlock blacklist={true} />} />
