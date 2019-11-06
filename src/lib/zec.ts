@@ -6,27 +6,33 @@ import { Address as ZAddress, Networks as ZNetworks } from "bitcore-lib-zcash";
 import axios from "axios";
 import chalk from "chalk";
 import BigNumber from "bignumber.js";
+import RenSDK from "@renproject/ren";
 
 import { chainSo, ChainSoNetwork, getUTXOs, privateToAddress, sumBalance, transfer } from "./btc";
 
 /** ZEC ***********************************************************************/
 
-const getZcashUTXOs = getUTXOs(chainSo, ChainSoNetwork.ZEC);
+const getZcashUTXOs = RenSDK.getUTXOs.getZcashUTXOs("testnet"); // getUTXOs(chainSo, ChainSoNetwork.ZEC);
 export const privateToZECAddress = privateToAddress(ZAddress, ZNetworks.testnet);
 export const sumZECBalance = sumBalance(getZcashUTXOs, ZAddress, ZNetworks.testnet);
 
-export const sendRawTransaction = async (txHex: string, mercuryURL: string, chainSO: string) => {
+export const sendRawTransaction = async (txHex: string, mercuryURL: string, chainSO: string): Promise<string> => {
     try {
-        await axios.post(
+        const response = await axios.post<{ error: string | null, id: null, result: string }>(
             mercuryURL,
             { jsonrpc: "2.0", method: "sendrawtransaction", params: [txHex] },
             { timeout: 5000 }
-        )
+        );
+        if (response.data.error) {
+            throw new Error(response.data.error);
+        }
+        return response.data.result;
     } catch (error) {
         console.log(`Unable to submit to Mercury (${(error.response && error.response.data && error.response.data.error && error.response.data.error.message) || error}). Trying chain.so...`);
         try {
             console.log(txHex);
             await axios.post(`https://chain.so/api/v2/send_tx/${chainSO}`, { tx_hex: txHex }, { timeout: 5000 });
+            return "";
         } catch (chainError) {
             console.error(`chain.so returned error ${chainError.message}`);
             console.log(`\n\n\nPlease check your balance balance!\n`);
@@ -42,7 +48,7 @@ export const sendRawTransaction = async (txHex: string, mercuryURL: string, chai
 //     return bitcoin.ECPair.fromWIF(rawPrivateKey, bitcoin.networks.zcashTest).getAddress();
 // }
 
-export const transferZEC = async (rawPrivateKey: string, gatewayAddress: string, amountSatoshis: BigNumber) => {
+export const transferZEC = async (rawPrivateKey: string, gatewayAddress: string, amountSatoshis: BigNumber): Promise<string> => {
     console.log(`Please deposit ${amountSatoshis.div(new BigNumber(10).pow(8)).toFixed()} ZEC to ${gatewayAddress}`);
 
     const privateKey = privateToZECAddress(rawPrivateKey).privateKey.toWIF();
@@ -85,7 +91,7 @@ export const transferZEC = async (rawPrivateKey: string, gatewayAddress: string,
     try {
         // Sign inputs
         utxos.map((utxo, i) => {
-            console.log(i, account, bitcoin.Transaction.SIGHASH_SINGLE, utxo.value);
+            // console.log(i, account, bitcoin.Transaction.SIGHASH_SINGLE, utxo.value);
             try {
                 tx.sign(i, account, "", bitcoin.Transaction.SIGHASH_SINGLE, utxo.value);
             } catch (error) {
@@ -102,7 +108,7 @@ export const transferZEC = async (rawPrivateKey: string, gatewayAddress: string,
             throw error;
         }
 
-        await sendRawTransaction(built.toHex(), "http://139.59.217.120:5000/zec/testnet", "ZECTEST");
+        return await sendRawTransaction(built.toHex(), "http://139.59.217.120:5000/zec/testnet", "ZECTEST");
     } catch (error) {
         console.error(error);
         throw error;

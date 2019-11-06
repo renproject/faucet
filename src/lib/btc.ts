@@ -8,6 +8,7 @@ import {
     Script as ZScript, Transaction as ZTransaction,
 } from "bitcore-lib-zcash";
 import BigNumber from "bignumber.js";
+import RenSDK from "@renproject/ren";
 
 /** COMMON ********************************************************************/
 
@@ -131,7 +132,7 @@ export const transfer = (
 
 /** BTC ***********************************************************************/
 
-const getBitcoinUTXOs = getUTXOs(chainSo, ChainSoNetwork.BTC);
+const getBitcoinUTXOs: utxoFn = RenSDK.getUTXOs.getBitcoinUTXOs("testnet");
 export const privateToBTCAddress = privateToAddress(BAddress, BNetworks.testnet);
 export const sumBTCBalance = sumBalance(getBitcoinUTXOs, BAddress, BNetworks.testnet);
 const submitBTCSTX = async (transaction: BTransaction) => {
