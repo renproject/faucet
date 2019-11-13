@@ -126,7 +126,7 @@ $blue-bright: #006FE8;
 }
 
 .Select--currency__option {
-    font-size: 40px;
+    font-size: 30px;
     font-weight: 900;
     display: flex !important;
     align-items: center !important;
@@ -137,8 +137,8 @@ $blue-bright: #006FE8;
     border: 2px dashed $black;
 
     svg {
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
     }
 
     span {

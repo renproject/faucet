@@ -5,9 +5,13 @@ import { Redirect } from "react-router";
 import BigNumber from "bignumber.js";
 import Web3 from "web3";
 import AutosizeInput from "react-input-autosize";
+import { privateToAddress } from "ethereumjs-util";
 
+import { privateToBCHAddress } from "../lib/bch";
 import { checkAddress } from "../lib/blacklist";
+import { privateToBTCAddress } from "../lib/btc";
 import { getWeb3, sendTokens, Token, TokenDetails, TOKENS } from "../lib/web3";
+import { privateToZECAddress } from "../lib/zec";
 import { SelectToken } from "./selectToken/SelectToken";
 
 export enum MessageType {
@@ -36,8 +40,8 @@ interface FaucetState {
     web3: Web3;
 
     blacklisted: boolean;
-
     submitting: boolean;
+    showingAddresses: boolean;
 }
 
 interface SelectOption {
@@ -72,6 +76,7 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             blacklisted: false,
 
             submitting: false,
+            showingAddresses: false,
         };
     }
 
@@ -101,13 +106,31 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
     }
 
     public render() {
-        const { recipient, messages, balances, blacklisted, submitting } = this.state;
+        const { recipient, messages, balances, blacklisted, submitting, showingAddresses } = this.state;
 
         if (blacklisted) {
             return <Redirect push to="/blacklisted" />;
         }
 
+        const ethAddress = privateToAddress(new Buffer(this.props.privateKey, "hex")).toString("hex");
+        const { address: btcAddress } = privateToBTCAddress(this.props.privateKey);
+        const { address: zecAddress } = privateToZECAddress(this.props.privateKey);
+        const { address: bchAddress } = privateToBCHAddress(this.props.privateKey);
+
         return <>
+            <div className="show-addresses" >
+                {showingAddresses ?
+                    <span style={{ position: "absolute", top: "20px", right: "20px" }}>
+                        ETH address: 0x{ethAddress}<br />
+                        BTC address: {btcAddress}<br />
+                        ZEC address: {zecAddress}<br />
+                        BCH address: {bchAddress}
+                    </span> :
+                    <span onClick={this.showAddresses} role="button" className="show-addresses-button" style={{ cursor: "pointer", position: "absolute", top: "20px", right: "20px" }}>
+                        Show addresses
+                    </span>
+                }
+            </div>
             <form className="big-text" onSubmit={this.handleFaucet}>
                 I want to receive
                     <br />
@@ -136,6 +159,10 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
                 })}
             </form>
         </>;
+    }
+
+    public showAddresses = () => {
+        this.setState({ showingAddresses: true });
     }
 
     public addMessage = (msg: Message) => {

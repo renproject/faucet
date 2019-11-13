@@ -2,6 +2,7 @@
 
 import * as bitcoin from "bitgo-utxo-lib";
 
+import { toCashAddress, toLegacyAddress } from "bchaddrjs";
 import axios from "axios";
 import chalk from "chalk";
 import BigNumber from "bignumber.js";
@@ -16,11 +17,11 @@ const importBCHPrivateKey = (privateKeyIn: string) => {
     return bitcoin.ECPair.fromPrivateKeyBuffer(Buffer.from(privateKeyIn, "hex"), bitcoin.networks.bitcoincashTestnet);
 }
 export const privateToBCHAddress = (privateKeyIn: string) => { // privateToAddress(ZAddress, ZNetworks.testnet);
-    return { address: importBCHPrivateKey(privateKeyIn).getAddress() };
+    return { address: toCashAddress(importBCHPrivateKey(privateKeyIn).getAddress()) };
 }
 
 export const sumBCHBalance = async (privateKey: string): Promise<BigNumber> => {
-    const address = bitcoin.ECPair.fromPrivateKeyBuffer(Buffer.from(privateKey, "hex"), bitcoin.networks.bitcoincashTestnet).getAddress();
+    const address = privateToBCHAddress(privateKey).address;
     const utxos = await getBCHUTXOs(address, 0);
     return utxos.map(item => item.value).reduce((prev, next) => prev.plus(next), new BigNumber(0)).dividedBy(10 ** 8);
 }
@@ -67,7 +68,7 @@ export const transferBCH = async (rawPrivateKey: string, gatewayAddress: string,
     // const alice = bitcoin.ECPair.fromPrivateKeyBuffer(Buffer.from(keyHex, "hex"), );
     // const account = bitcoin.ECPair.fromWIF(privateKey, bitcoin.networks.bitcoincashTestnet);
 
-    const utxos = await getBCHUTXOs(account.getAddress().toString(), 0);
+    const utxos = await getBCHUTXOs(account.getAddress(), 0);
 
     const fees = new BigNumber(10000);
 
@@ -88,7 +89,7 @@ export const transferBCH = async (rawPrivateKey: string, gatewayAddress: string,
     });
 
     // Add outputs
-    tx.addOutput(gatewayAddress, amountSatoshis.toNumber());
+    tx.addOutput(toLegacyAddress(gatewayAddress), amountSatoshis.toNumber());
     if (change.gt(0)) { tx.addOutput(account.getAddress(), change.toNumber()); }
 
     try {
