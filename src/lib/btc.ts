@@ -1,12 +1,8 @@
 import Axios from "axios";
 import {
-    Address as BAddress, Networks as BNetworks, Opcode as BOpcode, PrivateKey as BPrivateKey,
-    Script as BScript, Transaction as BTransaction,
+    Address as BAddress, Networks as BNetworks, PrivateKey as BPrivateKey, Script as BScript,
+    Transaction as BTransaction,
 } from "bitcore-lib";
-import {
-    Address as ZAddress, Networks as ZNetworks, Opcode as ZOpcode, PrivateKey as ZPrivateKey,
-    Script as ZScript, Transaction as ZTransaction,
-} from "bitcore-lib-zcash";
 import BigNumber from "bignumber.js";
 import RenSDK from "@renproject/ren";
 
@@ -30,7 +26,6 @@ export const chainSo = "https://chain.so/api/v2";
 
 export enum ChainSoNetwork {
     BTC = "BTCTEST",
-    ZEC = "ZECTEST",
 }
 
 type utxoFn = (address: string, confirmations: number) => Promise<UTXO[]>;
@@ -66,14 +61,14 @@ export const getUTXOs = (endpoint: string, network: string): utxoFn => async (ad
     }
 };
 
-export const privateToAddress = (Address: typeof BAddress | typeof ZAddress, network: typeof BNetworks.testnet | ZNetworks.Network) => (privateKeyIn: string) => {
+export const privateToAddress = (Address: typeof BAddress, network: typeof BNetworks.testnet) => (privateKeyIn: string) => {
     const privateKey = new BPrivateKey(privateKeyIn, network);
     const address = (Address as any).fromPublicKeyHash((privateKey.publicKey as any)._getID(), network).toString()
     // address = privateKey.toAddress().toString();
     return { privateKey, address };
 }
 
-export const sumBalance = (utxoFn: utxoFn, Address: typeof BAddress | typeof ZAddress, network: typeof BNetworks.testnet | ZNetworks.Network) => async (privateKey: string): Promise<BigNumber> => {
+export const sumBalance = (utxoFn: utxoFn, Address: typeof BAddress, network: typeof BNetworks.testnet) => async (privateKey: string): Promise<BigNumber> => {
     const { address } = privateToAddress(Address, network)(privateKey);
     const utxos = await utxoFn(address, 0);
     return utxos.map(item => item.value).reduce((prev, next) => prev.plus(next), new BigNumber(0)).dividedBy(10 ** 8);
@@ -88,12 +83,12 @@ interface ChainSoSTX {
 }
 
 export const transfer = (
-    Transaction: typeof BTransaction | typeof ZTransaction,
-    Address: typeof BAddress | typeof ZAddress,
-    Script: typeof BScript | typeof ZScript,
-    network: typeof BNetworks.testnet | ZNetworks.Network,
+    Transaction: typeof BTransaction,
+    Address: typeof BAddress,
+    Script: typeof BScript,
+    network: typeof BNetworks.testnet,
     utxoFn: utxoFn,
-    submitSTX: (transaction: BTransaction | ZTransaction) => Promise<string>
+    submitSTX: (transaction: BTransaction) => Promise<string>
 ) =>
     async (privateKeyIn: string, toAddress: string, amount: BigNumber) => {
         const { address, privateKey } = privateToAddress(Address, network)(privateKeyIn);

@@ -85,9 +85,9 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
         const loop = async () => {
             this.setState({ balancesLoading: true });
 
-            for (const token of TOKENS.toArray()) {
-                this.setState({ balances: this.state.balances.set(token.code, await token.getBalance(web3, ethAddress, privateKey, token)) });
-            }
+            TOKENS.reduce((async (promise, token) =>
+                ((await promise) && this.setState({ balances: this.state.balances.set(token.code, await token.getBalance(web3, ethAddress, privateKey, token)) })) || true
+            ), Promise.resolve(true));
 
             this.setState({ balancesLoading: false });
             if (this.timeout) { clearTimeout(this.timeout); }

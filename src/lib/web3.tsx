@@ -11,11 +11,13 @@ import BigNumber from "bignumber.js";
 
 // import { Contract } from "web3/types";
 import { Message, MessageType } from "../components/Faucet";
+import { ReactComponent as iconBCH } from "../img/bch.svg";
 import { ReactComponent as iconBTC } from "../img/btc.svg";
 import { ReactComponent as iconDAI } from "../img/dai.svg";
 import { ReactComponent as iconETH } from "../img/eth.svg";
 import { ReactComponent as iconREN } from "../img/ren.svg";
 import { ReactComponent as iconZEC } from "../img/zec.svg";
+import { sumBCHBalance, transferBCH } from "./bch";
 import { sumBTCBalance, transferBTC } from "./btc";
 import { sumZECBalance, transferZEC } from "./zec";
 
@@ -25,6 +27,7 @@ export enum Token {
     DAI = "DAI",
     BTC = "BTC",
     ZEC = "ZEC",
+    BCH = "BCH",
 }
 
 export interface TokenDetails {
@@ -46,6 +49,10 @@ const getBTCBalance = async (web3: Web3, account: string, privateKey: string, to
 
 const getZECBalance = async (web3: Web3, account: string, privateKey: string, token: TokenDetails): Promise<BigNumber> => {
     return sumZECBalance(privateKey);
+}
+
+const getBCHBalance = async (web3: Web3, account: string, privateKey: string, token: TokenDetails): Promise<BigNumber> => {
+    return sumBCHBalance(privateKey);
 }
 
 const getERC20Balance = async (web3: Web3, account: string, privateKey: string, token: TokenDetails) => {
@@ -79,7 +86,7 @@ const onError = (addMessage: (msg: Message) => void, token: string) => (err: Err
 }
 
 const shiftValue = (token: Token, amount: string): BigNumber => {
-    const tokenDetails = TOKENS.get(token);
+    const tokenDetails = TOKENS.get(token)!;
     return new BigNumber(amount).multipliedBy(new BigNumber(10).pow(tokenDetails.digits));
 }
 
@@ -113,6 +120,19 @@ const sendZEC = async (token: Token, web3: Web3, privateKey: string, recipient: 
     }
 }
 
+const sendBCH = async (token: Token, web3: Web3, privateKey: string, recipient: string, amount: string, addMessage: (msg: Message) => void, from: string): Promise<void> => {
+    try {
+        const txHash = await transferBCH(privateKey, recipient, shiftValue(token, amount));
+        addMessage({
+            type: MessageType.INFO,
+            key: Token.BCH,
+            message: <span>Sending {amount} {token} (<a href={`https://explorer.bitcoin.com/tbch/tx/${txHash}`}>Explorer link</a>)</span>,
+        });
+    } catch (error) {
+        onError(addMessage, Token.BCH)(error);
+    }
+}
+
 const sendBTC = async (token: Token, web3: Web3, privateKey: string, recipient: string, amount: string, addMessage: (msg: Message) => void, from: string): Promise<void> => {
     try {
         const txHash = await transferBTC(privateKey, recipient, shiftValue(token, amount));
@@ -129,7 +149,7 @@ const sendBTC = async (token: Token, web3: Web3, privateKey: string, recipient: 
 }
 
 const sendERC20Token = async (token: Token, web3: Web3, privateKey: string, recipient: string, amount: string, addMessage: (msg: Message) => void, from: string) => {
-    const tokenDetails = TOKENS.get(token);
+    const tokenDetails = TOKENS.get(token)!;
     try {
         const erc20 = await getERC20Contract(web3, tokenDetails.address);
         const hash = await new Promise<string>((resolve, reject) => {
@@ -151,13 +171,14 @@ export const TOKENS = OrderedMap<string, TokenDetails>()
     .set(Token.DAI, { code: Token.DAI, digits: 18, address: "0xc4375b7de8af5a38a93548eb8453a498222c4ff2", image: iconDAI, getBalance: getERC20Balance, transfer: sendERC20Token })
     .set(Token.BTC, { code: Token.BTC, digits: 8, address: "", image: iconBTC, getBalance: getBTCBalance, transfer: sendBTC })
     .set(Token.ZEC, { code: Token.ZEC, digits: 8, address: "", image: iconZEC, getBalance: getZECBalance, transfer: sendZEC })
+    .set(Token.BCH, { code: Token.BCH, digits: 8, address: "", image: iconBCH, getBalance: getBCHBalance, transfer: sendBCH })
     ;
 
 export const sendTokens = async (
     account: string, web3: Web3, privateKey: string, token: Token,
     recipient: string, amount: string, addMessage: (msg: Message) => void
 ): Promise<void> => {
-    await TOKENS.get(token).transfer(token, web3, privateKey, recipient, amount, addMessage, account);
+    await TOKENS.get(token)!.transfer(token, web3, privateKey, recipient, amount, addMessage, account);
 };
 
 export const getWeb3 = (privateKey: string) => {

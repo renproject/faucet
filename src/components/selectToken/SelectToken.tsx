@@ -30,7 +30,7 @@ export class SelectToken<Token extends string> extends React.Component<Props<Tok
             }),
         };
 
-        const tokens = allTokens.toArray();
+        const tokens = allTokens.valueSeq().toArray();
 
         return (
             <Select

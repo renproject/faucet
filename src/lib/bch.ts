@@ -9,19 +9,19 @@ import RenSDK from "@renproject/ren";
 
 // import { sumBalance } from "./btc";
 
-/** ZEC ***********************************************************************/
+/** BCH ***********************************************************************/
 
-const getZECUTXOs = RenSDK.getUTXOs.getZcashUTXOs("testnet");
-const importZECPrivateKey = (privateKeyIn: string) => {
-    return bitcoin.ECPair.fromPrivateKeyBuffer(Buffer.from(privateKeyIn, "hex"), bitcoin.networks.zcashTest);
+const getBCHUTXOs = RenSDK.getUTXOs.getBCashUTXOs("testnet");
+const importBCHPrivateKey = (privateKeyIn: string) => {
+    return bitcoin.ECPair.fromPrivateKeyBuffer(Buffer.from(privateKeyIn, "hex"), bitcoin.networks.bitcoincashTestnet);
 }
-export const privateToZECAddress = (privateKeyIn: string) => { // privateToAddress(ZAddress, ZNetworks.testnet);
-    return { address: importZECPrivateKey(privateKeyIn).getAddress() };
+export const privateToBCHAddress = (privateKeyIn: string) => { // privateToAddress(ZAddress, ZNetworks.testnet);
+    return { address: importBCHPrivateKey(privateKeyIn).getAddress() };
 }
 
-export const sumZECBalance = async (privateKey: string): Promise<BigNumber> => {
-    const address = bitcoin.ECPair.fromPrivateKeyBuffer(Buffer.from(privateKey, "hex"), bitcoin.networks.zcashTest).getAddress();
-    const utxos = await getZECUTXOs(address, 0);
+export const sumBCHBalance = async (privateKey: string): Promise<BigNumber> => {
+    const address = bitcoin.ECPair.fromPrivateKeyBuffer(Buffer.from(privateKey, "hex"), bitcoin.networks.bitcoincashTestnet).getAddress();
+    const utxos = await getBCHUTXOs(address, 0);
     return utxos.map(item => item.value).reduce((prev, next) => prev.plus(next), new BigNumber(0)).dividedBy(10 ** 8);
 }
 
@@ -53,27 +53,25 @@ export const sendRawTransaction = async (txHex: string, mercuryURL: string, chai
     }
 };
 
-// export const privateToZECAddress = (rawPrivateKey: string): string => {
-//     return bitcoin.ECPair.fromWIF(rawPrivateKey, bitcoin.networks.zcashTest).getAddress();
+// export const privateToBCHAddress = (rawPrivateKey: string): string => {
+//     return bitcoin.ECPair.fromWIF(rawPrivateKey, bitcoin.networks.bitcoincashTestnet).getAddress();
 // }
 
-export const transferZEC = async (rawPrivateKey: string, gatewayAddress: string, amountSatoshis: BigNumber): Promise<string> => {
-    console.log(`Please deposit ${amountSatoshis.div(new BigNumber(10).pow(8)).toFixed()} ZEC to ${gatewayAddress}`);
+export const transferBCH = async (rawPrivateKey: string, gatewayAddress: string, amountSatoshis: BigNumber): Promise<string> => {
+    console.log(`Please deposit ${amountSatoshis.div(new BigNumber(10).pow(8)).toFixed()} BCH to ${gatewayAddress}`);
 
-    // const privateKey = privateToZECAddress(rawPrivateKey).privateKey.toWIF();
+    // const privateKey = privateToBCHAddress(rawPrivateKey).privateKey.toWIF();
 
-    const account = importZECPrivateKey(rawPrivateKey);
+    const account = importBCHPrivateKey(rawPrivateKey);
 
     // const alice = bitcoin.ECPair.fromPrivateKeyBuffer(Buffer.from(keyHex, "hex"), );
-    // const account = bitcoin.ECPair.fromWIF(privateKey, bitcoin.networks.zcashTest);
+    // const account = bitcoin.ECPair.fromWIF(privateKey, bitcoin.networks.bitcoincashTestnet);
 
-    const utxos = await getZECUTXOs(account.getAddress().toString(), 0);
+    const utxos = await getBCHUTXOs(account.getAddress().toString(), 0);
 
     const fees = new BigNumber(10000);
 
-    const tx = new bitcoin.TransactionBuilder(bitcoin.networks.zcashTest);
-    tx.setVersion(bitcoin.Transaction.ZCASH_SAPLING_VERSION);  // 4
-    tx.setVersionGroupId(parseInt("0x892F2085", 16));
+    const tx = new bitcoin.TransactionBuilder(bitcoin.networks.bitcoincashTestnet);
 
     // Add up balance
     const availableSatoshis = utxos.reduce((sum, utxo) => sum.plus(utxo.value), new BigNumber(0));
@@ -94,7 +92,7 @@ export const transferZEC = async (rawPrivateKey: string, gatewayAddress: string,
     if (change.gt(0)) { tx.addOutput(account.getAddress(), change.toNumber()); }
 
     try {
-        console.log(`${chalk.magenta(`[INFO]`)} ${account.getAddress()} has ${chalk.magenta(`${change.div(new BigNumber(10).pow(8)).toFixed()}`)} tZEC remaining`);
+        console.log(`${chalk.magenta(`[INFO]`)} ${account.getAddress()} has ${chalk.magenta(`${change.div(new BigNumber(10).pow(8)).toFixed()}`)} tBCH remaining`);
     } catch (error) {
         console.error(error);
     }
@@ -102,9 +100,8 @@ export const transferZEC = async (rawPrivateKey: string, gatewayAddress: string,
     try {
         // Sign inputs
         utxos.map((utxo, i) => {
-            // console.log(i, account, bitcoin.Transaction.SIGHASH_SINGLE, utxo.value);
             try {
-                tx.sign(i, account, "", bitcoin.Transaction.SIGHASH_SINGLE, utxo.value);
+                tx.sign(i, account, "", bitcoin.Transaction.SIGHASH_SINGLE | bitcoin.Transaction.SIGHASH_BITCOINCASHBIP143, utxo.value);
             } catch (error) {
                 console.error(error);
                 throw error;
@@ -119,7 +116,7 @@ export const transferZEC = async (rawPrivateKey: string, gatewayAddress: string,
             throw error;
         }
 
-        return await sendRawTransaction(built.toHex(), "http://139.59.217.120:5000/zec/testnet", "ZECTEST");
+        return await sendRawTransaction(built.toHex(), "http://139.59.217.120:5000/bch/testnet", "BCHTEST");
     } catch (error) {
         console.error(error);
         throw error;

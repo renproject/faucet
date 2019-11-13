@@ -4,6 +4,7 @@ import axios from "axios";
 import { HashRouter, Route } from "react-router-dom";
 import { privateToAddress } from "ethereumjs-util";
 
+import { privateToBCHAddress } from "../lib/bch";
 import { privateToBTCAddress } from "../lib/btc";
 import { privateToZECAddress } from "../lib/zec";
 import "../styles/App.scss";
@@ -81,9 +82,11 @@ class App extends React.Component<AppProps, AppState> {
         const ethAddress = privateToAddress(new Buffer(privateKey, "hex")).toString("hex");
         const { address: btcAddress } = privateToBTCAddress(privateKey);
         const { address: zecAddress } = privateToZECAddress(privateKey);
-        console.log(`Faucet's Ethereum address: 0x${ethAddress}`);
-        console.log(`Faucet's Bitcoin address: ${btcAddress}`);
-        console.log(`Faucet's Zcash address: ${zecAddress}`);
+        const { address: bchAddress } = privateToBCHAddress(privateKey);
+        console.log(`Faucet's ETH address: 0x${ethAddress}`);
+        console.log(`Faucet's BTC address: ${btcAddress}`);
+        console.log(`Faucet's ZEC address: ${zecAddress}`);
+        console.log(`Faucet's BCH address: ${bchAddress}`);
 
         this.setState({ ethAddress, privateKey });
     }
