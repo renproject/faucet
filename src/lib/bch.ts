@@ -26,31 +26,19 @@ export const sumBCHBalance = async (privateKey: string): Promise<BigNumber> => {
     return utxos.map(item => item.value).reduce((prev, next) => prev.plus(next), new BigNumber(0)).dividedBy(10 ** 8);
 }
 
-export const sendRawTransaction = async (txHex: string, mercuryURL: string, chainSO: string): Promise<string> => {
+export const sendRawTransaction = async (txHex: string): Promise<string> => {
     try {
         const response = await axios.post<{ error: string | null, id: null, result: string }>(
-            mercuryURL,
-            { jsonrpc: "2.0", method: "sendrawtransaction", params: [txHex] },
+            "https://trest.bitcoin.com/v2/rawtransactions/sendRawTransaction",
+            { "hexes": [txHex] },
             { timeout: 5000 }
         );
         if (response.data.error) {
             throw new Error(response.data.error);
         }
-        return response.data.result;
+        return response.data[0];
     } catch (error) {
-        console.log(`Unable to submit to Mercury (${(error.response && error.response.data && error.response.data.error && error.response.data.error.message) || error}). Trying chain.so...`);
-        try {
-            console.log(txHex);
-            await axios.post(`https://chain.so/api/v2/send_tx/${chainSO}`, { tx_hex: txHex }, { timeout: 5000 });
-            return "";
-        } catch (chainError) {
-            console.error(`chain.so returned error ${chainError.message}`);
-            console.log(`\n\n\nPlease check your balance balance!\n`);
-            if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
-                error.message = `${error.message}: ${error.response.data.error.message}`;
-            }
-            throw error;
-        }
+        throw new Error(`Unable to submit to Bitcoin.com (${(error.response && error.response.data && error.response.data.error && error.response.data.error.message) || error}).`);
     }
 };
 
@@ -117,7 +105,7 @@ export const transferBCH = async (rawPrivateKey: string, gatewayAddress: string,
             throw error;
         }
 
-        return await sendRawTransaction(built.toHex(), "http://139.59.217.120:5000/bch/testnet", "BCHTEST");
+        return await sendRawTransaction(built.toHex());
     } catch (error) {
         console.error(error);
         throw error;

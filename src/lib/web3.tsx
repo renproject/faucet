@@ -136,7 +136,6 @@ const sendBCH = async (token: Token, web3: Web3, privateKey: string, recipient: 
 const sendBTC = async (token: Token, web3: Web3, privateKey: string, recipient: string, amount: string, addMessage: (msg: Message) => void, from: string): Promise<void> => {
     try {
         const txHash = await transferBTC(privateKey, recipient, shiftValue(token, amount));
-        console.log(txHash);
         addMessage({
             type: MessageType.INFO,
             key: Token.BTC,
