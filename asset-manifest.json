@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/internal-faucet-js/static/css/main.39cf4da3.chunk.css",
-    "main.js": "/internal-faucet-js/static/js/main.a02f41ba.chunk.js",
-    "main.js.map": "/internal-faucet-js/static/js/main.a02f41ba.chunk.js.map",
+    "main.js": "/internal-faucet-js/static/js/main.b4243163.chunk.js",
+    "main.js.map": "/internal-faucet-js/static/js/main.b4243163.chunk.js.map",
     "runtime-main.js": "/internal-faucet-js/static/js/runtime-main.936b4612.js",
     "runtime-main.js.map": "/internal-faucet-js/static/js/runtime-main.936b4612.js.map",
-    "static/js/2.0465e76c.chunk.js": "/internal-faucet-js/static/js/2.0465e76c.chunk.js",
-    "static/js/2.0465e76c.chunk.js.map": "/internal-faucet-js/static/js/2.0465e76c.chunk.js.map",
+    "static/js/2.0038c120.chunk.js": "/internal-faucet-js/static/js/2.0038c120.chunk.js",
+    "static/js/2.0038c120.chunk.js.map": "/internal-faucet-js/static/js/2.0038c120.chunk.js.map",
     "index.html": "/internal-faucet-js/index.html",
-    "precache-manifest.c6e82a0b3eadb758621e2a3f6a14343f.js": "/internal-faucet-js/precache-manifest.c6e82a0b3eadb758621e2a3f6a14343f.js",
+    "precache-manifest.fa019b9f896298fa025359a3169b1aaa.js": "/internal-faucet-js/precache-manifest.fa019b9f896298fa025359a3169b1aaa.js",
     "service-worker.js": "/internal-faucet-js/service-worker.js",
     "static/css/main.39cf4da3.chunk.css.map": "/internal-faucet-js/static/css/main.39cf4da3.chunk.css.map",
     "static/media/App.scss": "/internal-faucet-js/static/media/Cantarell.8a31a1d0.ttf",
@@ -23,8 +23,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.936b4612.js",
-    "static/js/2.0465e76c.chunk.js",
+    "static/js/2.0038c120.chunk.js",
     "static/css/main.39cf4da3.chunk.css",
-    "static/js/main.a02f41ba.chunk.js"
+    "static/js/main.b4243163.chunk.js"
   ]
 }
