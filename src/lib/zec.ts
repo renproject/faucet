@@ -104,6 +104,10 @@ export const transferZEC = async (rawPrivateKey: string, gatewayAddress: string,
         utxos.map((utxo, i) => {
             // console.log(i, account, bitcoin.Transaction.SIGHASH_SINGLE, utxo.value);
             try {
+                console.log("i", i);
+                console.log("account", account);
+                console.log("bitcoin.Transaction.SIGHASH_SINGLE", bitcoin.Transaction.SIGHASH_SINGLE);
+                console.log("utxo.value", utxo.value);
                 tx.sign(i, account, "", bitcoin.Transaction.SIGHASH_SINGLE, utxo.value);
             } catch (error) {
                 console.error(error);
