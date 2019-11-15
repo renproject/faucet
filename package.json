@@ -51,7 +51,7 @@
     "@types/node": "^12.12.5",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.3",
-    "gh-pages": "2.1.1",
+    "gh-pages": "2.0.1",
     "tslint-microsoft-contrib": "^6.2.0",
     "typescript": "^3.6.4"
   },
