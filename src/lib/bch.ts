@@ -6,13 +6,13 @@ import { toCashAddress, toLegacyAddress } from "bchaddrjs";
 import axios from "axios";
 import chalk from "chalk";
 import BigNumber from "bignumber.js";
-import RenSDK from "@renproject/ren";
+import RenSDK, { getBCashUTXOs } from "@renproject/ren";
 
 // import { sumBalance } from "./btc";
 
 /** BCH ***********************************************************************/
 
-const getBCHUTXOs = RenSDK.getUTXOs.getBCashUTXOs("testnet");
+const getBCHUTXOs = getBCashUTXOs("testnet");
 const importBCHPrivateKey = (privateKeyIn: string) => {
     return bitcoin.ECPair.fromPrivateKeyBuffer(Buffer.from(privateKeyIn, "hex"), bitcoin.networks.bitcoincashTestnet);
 }

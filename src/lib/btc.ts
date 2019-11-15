@@ -4,7 +4,7 @@ import {
     Transaction as BTransaction,
 } from "bitcore-lib";
 import BigNumber from "bignumber.js";
-import RenSDK from "@renproject/ren";
+import { getBitcoinUTXOs as getBTCUTXOs } from "@renproject/ren";
 
 /** COMMON ********************************************************************/
 
@@ -29,37 +29,6 @@ export enum ChainSoNetwork {
 }
 
 type utxoFn = (address: string, confirmations: number) => Promise<UTXO[]>;
-export const getUTXOs = (endpoint: string, network: string): utxoFn => async (address: string, confirmations: number): Promise<UTXO[]> => {
-    try {
-        const resp = await Axios.get<{ data: { txs: UTXO[] } }>(`${endpoint}/get_tx_unspent/${network}/${address}/${confirmations}`);
-        // tslint:disable-next-line:no-any
-        const data = (resp.data);
-
-        // Convert value to Satoshi
-        for (const [, tx] of Object.entries(data.data.txs)) {
-            // tslint:disable-next-line:no-any
-            (tx as any).value = new BigNumber((tx as any).value).multipliedBy(10 ** 8).toNumber(); // TODO: Use BN
-        }
-        return data.data.txs;
-    } catch (error) {
-        console.error(error);
-        const response = await Axios.get<UTXO2[]>(`https://blockstream.info/testnet/api/address/${address}/utxo`);
-        let utxos = [];
-
-        for (const utxo of response.data) {
-            // const response = await Axios.get<UTXO2[]>(`https://blockstream.info/testnet/api/tx/${utxo.txid}`);
-            // console.log(response);
-            utxos.push({
-                txid: utxo.txid,
-                value: utxo.value,
-                script_hex: "76a914b0c08e3b7da084d7dbe9431e9e49fb61fb3b64d788ac",
-                output_no: utxo.vout,
-            });
-        }
-
-        return utxos;
-    }
-};
 
 export const privateToAddress = (Address: typeof BAddress, network: typeof BNetworks.testnet) => (privateKeyIn: string) => {
     const privateKey = new BPrivateKey(privateKeyIn, network);
@@ -127,7 +96,7 @@ export const transfer = (
 
 /** BTC ***********************************************************************/
 
-const getBitcoinUTXOs: utxoFn = RenSDK.getUTXOs.getBitcoinUTXOs("testnet");
+const getBitcoinUTXOs: utxoFn = getBTCUTXOs("testnet");
 export const privateToBTCAddress = privateToAddress(BAddress, BNetworks.testnet);
 export const sumBTCBalance = sumBalance(getBitcoinUTXOs, BAddress, BNetworks.testnet);
 const submitBTCSTX = async (transaction: BTransaction) => {

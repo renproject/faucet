@@ -5,13 +5,13 @@ import * as bitcoin from "bitgo-utxo-lib";
 import axios from "axios";
 import chalk from "chalk";
 import BigNumber from "bignumber.js";
-import RenSDK from "@renproject/ren";
+import { getZcashUTXOs } from "@renproject/ren";
 
 // import { sumBalance } from "./btc";
 
 /** ZEC ***********************************************************************/
 
-const getZECUTXOs = RenSDK.getUTXOs.getZcashUTXOs("testnet");
+const getZECUTXOs = getZcashUTXOs("testnet");
 const importZECPrivateKey = (privateKeyIn: string) => {
     return bitcoin.ECPair.fromPrivateKeyBuffer(Buffer.from(privateKeyIn, "hex"), bitcoin.networks.zcashTest);
 }
