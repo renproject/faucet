@@ -100,9 +100,8 @@ class Unlock extends React.Component<UnlockProps, UnlockState> {
 
         const originalPassword = password;
 
-        // This doesn't improve the encryption security, but it makes it a bit
-        // less straight forward to brute force compared to using the password
-        // itself or the hash of the password.
+        // This doesn't improve the encryption security, but slows down password
+        // attempts in the front-end.
         for (let i = 0; i < 100000; i++) {
             password = SHA256(password);
         }

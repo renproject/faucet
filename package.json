@@ -1,8 +1,8 @@
 {
-  "name": "node-pool-js",
+  "name": "serverless-faucet",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://republicprotocol.github.io/internal-faucet-js",
+  "homepage": "https://renproject.github.io/serverless-faucet",
   "scripts": {
     "hash": "echo \"{\\\"HASH\\\": \\\"`git rev-parse HEAD`\\\"}\" > public/commitHash.json",
     "start": ". ./.env || true; npm run hash; node scripts/start.js",

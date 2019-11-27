@@ -8,7 +8,6 @@ import { privateToBCHAddress } from "../lib/bch";
 import { privateToBTCAddress } from "../lib/btc";
 import { privateToZECAddress } from "../lib/zec";
 import "../styles/App.scss";
-import { ReactComponent as Home } from "../styles/home.svg";
 import Faucet from "./Faucet";
 import Unlock from "./Unlock";
 
@@ -66,9 +65,6 @@ class App extends React.Component<AppProps, AppState> {
             <div className="App">
                 <HashRouter>
                     <div className="app">
-                        <a style={{ position: "absolute", top: "20px", left: "20px" }} className="home-link" href="https://renproject.github.io/tool-index/">
-                            <Home style={{ height: "30px", width: "30px" }} />
-                        </a>
                         <Route path="/blacklisted" render={() => <Unlock blacklist={true} />} />
                         <Route path="/" exact render={main} />
                     </div>
