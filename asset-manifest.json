@@ -1,30 +1,29 @@
 {
   "files": {
-    "main.css": "/internal-faucet-js/static/css/main.39cf4da3.chunk.css",
-    "main.js": "/internal-faucet-js/static/js/main.8d95d3f3.chunk.js",
-    "main.js.map": "/internal-faucet-js/static/js/main.8d95d3f3.chunk.js.map",
-    "runtime-main.js": "/internal-faucet-js/static/js/runtime-main.901199f4.js",
-    "runtime-main.js.map": "/internal-faucet-js/static/js/runtime-main.901199f4.js.map",
-    "static/js/2.ac76063c.chunk.js": "/internal-faucet-js/static/js/2.ac76063c.chunk.js",
-    "static/js/2.ac76063c.chunk.js.map": "/internal-faucet-js/static/js/2.ac76063c.chunk.js.map",
-    "index.html": "/internal-faucet-js/index.html",
-    "precache-manifest.5bbdd78e739644646fb9649a96818ec5.js": "/internal-faucet-js/precache-manifest.5bbdd78e739644646fb9649a96818ec5.js",
-    "service-worker.js": "/internal-faucet-js/service-worker.js",
-    "static/css/main.39cf4da3.chunk.css.map": "/internal-faucet-js/static/css/main.39cf4da3.chunk.css.map",
-    "static/media/App.scss": "/internal-faucet-js/static/media/Cantarell.8a31a1d0.ttf",
-    "static/media/Lock.svg": "/internal-faucet-js/static/media/Lock.eee4a708.svg",
-    "static/media/bch.svg": "/internal-faucet-js/static/media/bch.e57f2d22.svg",
-    "static/media/btc.svg": "/internal-faucet-js/static/media/btc.4ef09d53.svg",
-    "static/media/dai.svg": "/internal-faucet-js/static/media/dai.a9d5285c.svg",
-    "static/media/eth.svg": "/internal-faucet-js/static/media/eth.a0e920e8.svg",
-    "static/media/home.svg": "/internal-faucet-js/static/media/home.61e3033c.svg",
-    "static/media/ren.svg": "/internal-faucet-js/static/media/ren.8353410b.svg",
-    "static/media/zec.svg": "/internal-faucet-js/static/media/zec.ef5cb6e2.svg"
+    "main.css": "/serverless-faucet/static/css/main.d2e0d3a4.chunk.css",
+    "main.js": "/serverless-faucet/static/js/main.42841475.chunk.js",
+    "main.js.map": "/serverless-faucet/static/js/main.42841475.chunk.js.map",
+    "runtime-main.js": "/serverless-faucet/static/js/runtime-main.67c4f786.js",
+    "runtime-main.js.map": "/serverless-faucet/static/js/runtime-main.67c4f786.js.map",
+    "static/js/2.d95323ba.chunk.js": "/serverless-faucet/static/js/2.d95323ba.chunk.js",
+    "static/js/2.d95323ba.chunk.js.map": "/serverless-faucet/static/js/2.d95323ba.chunk.js.map",
+    "index.html": "/serverless-faucet/index.html",
+    "precache-manifest.808a2acf1afcc37ec2cc4eaf02fbc2aa.js": "/serverless-faucet/precache-manifest.808a2acf1afcc37ec2cc4eaf02fbc2aa.js",
+    "service-worker.js": "/serverless-faucet/service-worker.js",
+    "static/css/main.d2e0d3a4.chunk.css.map": "/serverless-faucet/static/css/main.d2e0d3a4.chunk.css.map",
+    "static/media/App.scss": "/serverless-faucet/static/media/Cantarell.8a31a1d0.ttf",
+    "static/media/Lock.svg": "/serverless-faucet/static/media/Lock.eee4a708.svg",
+    "static/media/bch.svg": "/serverless-faucet/static/media/bch.e57f2d22.svg",
+    "static/media/btc.svg": "/serverless-faucet/static/media/btc.4ef09d53.svg",
+    "static/media/dai.svg": "/serverless-faucet/static/media/dai.a9d5285c.svg",
+    "static/media/eth.svg": "/serverless-faucet/static/media/eth.a0e920e8.svg",
+    "static/media/ren.svg": "/serverless-faucet/static/media/ren.8353410b.svg",
+    "static/media/zec.svg": "/serverless-faucet/static/media/zec.ef5cb6e2.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.901199f4.js",
-    "static/js/2.ac76063c.chunk.js",
-    "static/css/main.39cf4da3.chunk.css",
-    "static/js/main.8d95d3f3.chunk.js"
+    "static/js/runtime-main.67c4f786.js",
+    "static/js/2.d95323ba.chunk.js",
+    "static/css/main.d2e0d3a4.chunk.css",
+    "static/js/main.42841475.chunk.js"
   ]
 }
