@@ -5,7 +5,7 @@ var fs = require('fs');
 const encode = (password) => {
 
     if (!password) {
-        console.error("Usage: node generateKey.js password");
+        throw new Error("Usage: node generateKey.js password");
     }
 
     const privateKey = crypto.randomBytes(32).toString("hex");
@@ -32,7 +32,7 @@ const encode = (password) => {
 const decode = (cipher, password) => {
 
     if (!cipher || !password) {
-        console.error("Usage: node generateKey.js cipher password");
+        throw new Error("Usage: node generateKey.js cipher password");
     }
 
     for (let i = 0; i < 100000; i++) {
