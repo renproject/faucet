@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/serverless-faucet/static/css/main.d2e0d3a4.chunk.css",
-    "main.js": "/serverless-faucet/static/js/main.42841475.chunk.js",
-    "main.js.map": "/serverless-faucet/static/js/main.42841475.chunk.js.map",
+    "main.js": "/serverless-faucet/static/js/main.fcb2875b.chunk.js",
+    "main.js.map": "/serverless-faucet/static/js/main.fcb2875b.chunk.js.map",
     "runtime-main.js": "/serverless-faucet/static/js/runtime-main.67c4f786.js",
     "runtime-main.js.map": "/serverless-faucet/static/js/runtime-main.67c4f786.js.map",
-    "static/js/2.d95323ba.chunk.js": "/serverless-faucet/static/js/2.d95323ba.chunk.js",
-    "static/js/2.d95323ba.chunk.js.map": "/serverless-faucet/static/js/2.d95323ba.chunk.js.map",
+    "static/js/2.816af36e.chunk.js": "/serverless-faucet/static/js/2.816af36e.chunk.js",
+    "static/js/2.816af36e.chunk.js.map": "/serverless-faucet/static/js/2.816af36e.chunk.js.map",
     "index.html": "/serverless-faucet/index.html",
-    "precache-manifest.808a2acf1afcc37ec2cc4eaf02fbc2aa.js": "/serverless-faucet/precache-manifest.808a2acf1afcc37ec2cc4eaf02fbc2aa.js",
+    "precache-manifest.ce5c4dc2c87730d4c74b721a062c334b.js": "/serverless-faucet/precache-manifest.ce5c4dc2c87730d4c74b721a062c334b.js",
     "service-worker.js": "/serverless-faucet/service-worker.js",
     "static/css/main.d2e0d3a4.chunk.css.map": "/serverless-faucet/static/css/main.d2e0d3a4.chunk.css.map",
     "static/media/App.scss": "/serverless-faucet/static/media/Cantarell.8a31a1d0.ttf",
@@ -22,8 +22,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.67c4f786.js",
-    "static/js/2.d95323ba.chunk.js",
+    "static/js/2.816af36e.chunk.js",
     "static/css/main.d2e0d3a4.chunk.css",
-    "static/js/main.42841475.chunk.js"
+    "static/js/main.fcb2875b.chunk.js"
   ]
 }
