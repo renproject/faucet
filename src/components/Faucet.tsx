@@ -92,7 +92,8 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
 
             await Promise.all(TOKENS.map((async (token) => {
                 try {
-                    (this.setState({ balances: this.state.balances.set(token.code, await token.getBalance(web3, ethAddress, privateKey, token)) }));
+                    const balance = await token.getBalance(web3, ethAddress, privateKey, token);
+                    (this.setState(state => ({ ...state, balances: state.balances.set(token.code, balance) })));
                 } catch (error) {
                     console.error(error);
                 }
