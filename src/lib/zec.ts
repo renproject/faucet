@@ -37,7 +37,7 @@ export const sendRawTransaction = async (txHex: string, mercuryURL: string, chai
         }
         return response.data.txid;
     } catch (error) {
-        console.log(`Unable to submit to ZCash Testnet Explorer (${(error.response && error.response.data && error.response.data.error && error.response.data.error.message) || error}). Trying mercury...`);
+        console.error(`Unable to submit to ZCash Testnet Explorer (${(error.response && error.response.data && error.response.data.error && error.response.data.error.message) || error}). Trying mercury...`);
         try {
             const response = await axios.post<{ error: string | null, id: null, result: string }>(
                 mercuryURL,
@@ -49,14 +49,14 @@ export const sendRawTransaction = async (txHex: string, mercuryURL: string, chai
             }
             return response.data.result;
         } catch (mercuryError) {
-            console.log(`Unable to submit to Mercury (${(mercuryError.response && mercuryError.response.data && mercuryError.response.data.error && mercuryError.response.data.error.message) || mercuryError}). Trying chain.so...`);
+            console.error(`Unable to submit to Mercury (${(mercuryError.response && mercuryError.response.data && mercuryError.response.data.error && mercuryError.response.data.error.message) || mercuryError}). Trying chain.so...`);
             try {
-                console.log(txHex);
+                console.error(txHex);
                 await axios.post(`https://chain.so/api/v2/send_tx/${chainSO}`, { tx_hex: txHex }, { timeout: 5000 });
                 return "";
             } catch (chainError) {
                 console.error(`chain.so returned error ${chainError.message}`);
-                console.log(`\n\n\nPlease check your balance balance!\n`);
+                console.error(`\n\n\nPlease check your balance balance!\n`);
                 if (mercuryError.response && mercuryError.response.data && mercuryError.response.data.error && mercuryError.response.data.error.message) {
                     mercuryError.message = `${mercuryError.message}: ${mercuryError.response.data.error.message}`;
                 }

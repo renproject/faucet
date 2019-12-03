@@ -14,7 +14,6 @@ import { getBCashUTXOs } from "@renproject/ren";
 
 const getBCHUTXOs = getBCashUTXOs("testnet");
 const importBCHPrivateKey = (privateKeyIn: string) => {
-    console.log("privateKeyIn", privateKeyIn);
     return bitcoin.ECPair.fromPrivateKeyBuffer(Buffer.from(privateKeyIn, "hex"), bitcoin.networks.bitcoincashTestnet);
 }
 export const privateToBCHAddress = (privateKeyIn: string) => { // privateToAddress(ZAddress, ZNetworks.testnet);

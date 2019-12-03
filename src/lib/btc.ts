@@ -89,7 +89,7 @@ export const transfer = (
         try {
             return await submitSTX(transaction);
         } catch (error) {
-            console.log(transaction.toString());
+            console.error(transaction.toString());
             throw error;
         }
     }
