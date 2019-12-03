@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "096119ea5785f9ead5aed5800c9bd3ab",
+    "revision": "25104834def96d2df0f7c1d82a3be17a",
     "url": "/serverless-faucet/index.html"
   },
   {
-    "revision": "d71fec86adbfcbce5f3a",
+    "revision": "488edc83298686496b0a",
     "url": "/serverless-faucet/static/css/main.d2e0d3a4.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/serverless-faucet/static/js/2.816af36e.chunk.js"
   },
   {
-    "revision": "d71fec86adbfcbce5f3a",
-    "url": "/serverless-faucet/static/js/main.44e7f5ab.chunk.js"
+    "revision": "488edc83298686496b0a",
+    "url": "/serverless-faucet/static/js/main.08aa6bd6.chunk.js"
   },
   {
     "revision": "8b74ee09d291d1424a0d",
