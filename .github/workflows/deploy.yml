@@ -32,7 +32,7 @@ jobs:
     - name: Install dependencies
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        yarn install --network-concurrency 1
+        yarn --version && yarn install --network-concurrency 1 --cache-folder ./.yarncache
     - name: Build and deploy
       run: |
         yarn run build
