@@ -2,142 +2,112 @@ import * as React from "react";
 
 import localforage from "localforage";
 import { AES, enc, SHA256 } from "crypto-js";
-import { privateToAddress } from "ethereumjs-util";
 
-import Loading from "./Loading";
+import { Loading } from "./Loading";
 
 const Lock = require("./Lock.svg");
 
-interface UnlockState {
-    password: string;
-    error: string | null;
-    loading: boolean;
-}
-
 interface UnlockProps {
-    blacklist?: boolean;
     unlockCallback?: (privateKey: string) => void;
 }
 
-// Private key encrypted using 2ROT13, AES and 2ROT13 again (for that
-// little bit extra security ;) )
+// Private key encrypted using AES
 const cipher = process.env.REACT_APP_PRIVATE_KEY_CIPHER || "";
 
-class Unlock extends React.Component<UnlockProps, UnlockState> {
+const Unlock = ({ unlockCallback }: UnlockProps) => {
+    let [password, setPassword] = React.useState("");
+    const [error, setError] = React.useState<string | null>(null);
+    const [loading, setLoading] = React.useState(false);
 
-    constructor(props: UnlockProps, context: object) {
-        super(props, context);
-        this.state = {
-            password: "",
-            error: null,
-            loading: false,
-        };
-    }
-
-    public componentDidMount = async () => {
-        const password = await localforage.getItem<string>("faucet-password");
-        if (password) {
-            this.setState({ password });
-            this.handleUnlock();
-        }
-    }
-
-    public render() {
-        const { password, error, loading } = this.state;
-        const { blacklist } = this.props;
-
-        return (
-            <>
-                <div className="Unlock">
-                    <img className="logo" src={Lock} />
-                    <form onSubmit={this.handleUnlock}>
-                        <input
-                            className="password"
-                            placeholder="Password"
-                            type="password"
-                            value={password}
-                            name="password"
-                            onChange={this.handleInput}
-                            disabled={blacklist}
-                        />
-                    </form>
-                </div>
-                <div className="Unlock--after">
-                    {loading ? <div className="error"><Loading /></div> : null}
-                    {error !== null ? <div className="error">{error}</div> : null}
-                    {blacklist ? <div className="error">You have been blacklisted</div> : null}
-                </div>
-            </>
-        );
-    }
-
-    private handleInput = (event: React.FormEvent<HTMLInputElement>): void => {
+    const updatePassword = (event: React.FormEvent<HTMLInputElement>): void => {
         const element = (event.target as HTMLInputElement);
-        this.setState((state) => ({ ...state, error: null, [element.name]: element.value }));
+        password = element.value
+        setPassword(password);
     }
 
-    private handleUnlock = (event?: React.FormEvent<HTMLFormElement>) => {
+    const handleUnlock = React.useCallback((event?: React.FormEvent<HTMLFormElement>) => {
         if (event) {
             event.preventDefault();
         }
 
-        this.setState({ loading: true });
+        setLoading(true);
+        setError(null);
 
         setTimeout(() => {
-            this.checkPassword()
-                .then(() => this.setState({ loading: false }))
+            checkPassword(password)
+                .then(() => setLoading(false))
                 .catch((err) => {
                     console.error(err);
-                    this.setState({ loading: false });
+                    setLoading(false);
                 });
         }, 100);
-    }
+    }, [password]);
 
-    private checkPassword = async () => {
-
-        const { unlockCallback } = this.props;
-        let { password }: any = this.state;
-
+    const checkPassword = React.useCallback(async (password: string) => {
         const originalPassword = password;
 
+        let passwordHash = password;
         // This doesn't improve the encryption security, but slows down password
         // attempts in the front-end.
         for (let i = 0; i < 100000; i++) {
-            password = SHA256(password);
+            passwordHash = SHA256(passwordHash) as unknown as string;
         }
-        password = password.toString();
-
-        this.setState({ error: null });
+        passwordHash = passwordHash.toString();
 
         // Decrypt
         let privateKey: string;
         try {
-            privateKey = AES.decrypt(cipher.toString(), password).toString(enc.Utf8);
+            privateKey = AES.decrypt(cipher.toString(), passwordHash).toString(enc.Utf8);
             if (privateKey === "") {
                 throw new Error("Access Denied");
             }
         } catch (err) {
             console.error(err);
-            this.setState({ error: "Access Denied" });
+            setError("Access Denied");
             return;
         }
 
         localforage.setItem("faucet-password", originalPassword);
 
-        if (unlockCallback && !this.props.blacklist) {
+        if (unlockCallback) {
             unlockCallback(privateKey);
         } else {
             return;
         }
-    }
-}
+    }, [unlockCallback]);
 
-export const rot13 = (clear: string): string => {
-    const input = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-    const output = "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm0987654321";
-    const index = (x: string) => input.indexOf(x);
-    const translate = (x: string) => index(x) > -1 ? output[index(x)] : x;
-    return clear.split("").map(translate).join("");
-};
+    React.useEffect(() => {
+        (async () => {
+            const storedPassword = await localforage.getItem<string>("faucet-password");
+            if (storedPassword) {
+                password = storedPassword;
+                setPassword(password);
+                setTimeout(handleUnlock, 100);
+            }
+        })().catch(console.error)
+    }, []);
+
+    return (
+        <>
+            <div className="Unlock">
+                <img className="logo" src={Lock} />
+                <form onSubmit={handleUnlock}>
+                    <input
+                        className="password"
+                        placeholder="Password"
+                        type="password"
+                        value={password}
+                        name="password"
+                        onChange={updatePassword}
+                    />
+                </form>
+            </div>
+            <div className="Unlock--after">
+                {loading ? <div className="error"><Loading /></div> : null}
+                {error !== null ? <div className="error">{error}</div> : null}
+            </div>
+        </>
+    );
+}
 
 export default Unlock;

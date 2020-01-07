@@ -36,8 +36,6 @@ body {
   max-width: calc(100vw - 60px);
 }
 
-.dashed-address {}
-
 .dashed-address>input {
   @extend .dashed;
   text-align: left;

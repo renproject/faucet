@@ -1,12 +1,10 @@
 import * as React from "react";
 
 import { List, OrderedMap } from "immutable";
-import { Redirect } from "react-router";
 import BigNumber from "bignumber.js";
 import AutosizeInput from "react-input-autosize";
 import CryptoAccount from "send-crypto";
 
-import { checkAddress } from "../lib/blacklist";
 import { balanceOf, extractError, sendTokens, Token, TokenIcons } from "../lib/sendCrypto";
 import { Addresses } from "./Addresses";
 import { SelectToken } from "./selectToken/SelectToken";
@@ -34,7 +32,6 @@ interface FaucetState {
 
     cryptoAccount: CryptoAccount;
 
-    blacklisted: boolean;
     submitting: boolean;
     showingAddresses: boolean;
 }
@@ -59,8 +56,6 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             balancesLoading: true,
 
             cryptoAccount: new CryptoAccount(props.privateKey, { network: "kovan" }),
-
-            blacklisted: false,
 
             submitting: false,
             showingAddresses: false,
@@ -94,11 +89,7 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
     }
 
     public render() {
-        const { recipient, messages, balances, blacklisted, submitting, cryptoAccount } = this.state;
-
-        if (blacklisted) {
-            return <Redirect push to="/blacklisted" />;
-        }
+        const { recipient, messages, balances, submitting, cryptoAccount } = this.state;
 
         return <>
             <Addresses cryptoAccount={cryptoAccount} />
@@ -157,12 +148,6 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             return;
         }
 
-        try {
-            checkAddress(recipient);
-        } catch (err) {
-            this.setState({ blacklisted: true });
-            return;
-        }
         this.setState({ submitting: true, messages: List() });
         try {
             await sendTokens(cryptoAccount, selectedToken as Token, recipient, value, this.addMessage);
