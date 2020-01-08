@@ -24,7 +24,7 @@ jobs:
       id: cache
       with:
         path: node_modules
-        key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
+        key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.OS }}-build-${{ env.cache-name }}-
           ${{ runner.OS }}-build-
@@ -32,7 +32,7 @@ jobs:
     - name: Install dependencies
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        yarn --version && yarn install --network-concurrency 1 --cache-folder ./.yarncache
+        npm install
     - name: Build and deploy
       run: |
         yarn run build
