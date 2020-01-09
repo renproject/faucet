@@ -4,8 +4,7 @@ import localforage from "localforage";
 import { AES, enc, SHA256 } from "crypto-js";
 
 import { Loading } from "./Loading";
-
-const Lock = require("./Lock.svg");
+import { ReactComponent as Lock } from "./Lock.svg";
 
 interface UnlockProps {
     unlockCallback?: (privateKey: string) => void;
@@ -90,7 +89,7 @@ const Unlock = ({ unlockCallback }: UnlockProps) => {
     return (
         <>
             <div className="Unlock">
-                <img className="logo" src={Lock} />
+                <Lock className="logo" />
                 <form onSubmit={handleUnlock}>
                     <input
                         className="password"
