@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/serverless-faucet/precache-manifest.525f39e4f994698eeb2b8598f162d54f.js"
+  "/serverless-faucet/precache-manifest.f9fadf746090c997f6b21c3394b9323e.js"
 );
 
 self.addEventListener('message', (event) => {
