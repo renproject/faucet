@@ -1,29 +1,29 @@
 {
   "files": {
-    "main.css": "/serverless-faucet/static/css/main.d2e0d3a4.chunk.css",
-    "main.js": "/serverless-faucet/static/js/main.08aa6bd6.chunk.js",
-    "main.js.map": "/serverless-faucet/static/js/main.08aa6bd6.chunk.js.map",
+    "main.css": "/serverless-faucet/static/css/main.87429071.chunk.css",
+    "main.js": "/serverless-faucet/static/js/main.76ddcb35.chunk.js",
+    "main.js.map": "/serverless-faucet/static/js/main.76ddcb35.chunk.js.map",
     "runtime-main.js": "/serverless-faucet/static/js/runtime-main.67c4f786.js",
     "runtime-main.js.map": "/serverless-faucet/static/js/runtime-main.67c4f786.js.map",
-    "static/js/2.816af36e.chunk.js": "/serverless-faucet/static/js/2.816af36e.chunk.js",
-    "static/js/2.816af36e.chunk.js.map": "/serverless-faucet/static/js/2.816af36e.chunk.js.map",
+    "static/js/2.27345fd9.chunk.js": "/serverless-faucet/static/js/2.27345fd9.chunk.js",
+    "static/js/2.27345fd9.chunk.js.map": "/serverless-faucet/static/js/2.27345fd9.chunk.js.map",
     "index.html": "/serverless-faucet/index.html",
-    "precache-manifest.65a6f5bc69d2277d7cea59286ca471f8.js": "/serverless-faucet/precache-manifest.65a6f5bc69d2277d7cea59286ca471f8.js",
+    "precache-manifest.525f39e4f994698eeb2b8598f162d54f.js": "/serverless-faucet/precache-manifest.525f39e4f994698eeb2b8598f162d54f.js",
     "service-worker.js": "/serverless-faucet/service-worker.js",
-    "static/css/main.d2e0d3a4.chunk.css.map": "/serverless-faucet/static/css/main.d2e0d3a4.chunk.css.map",
+    "static/css/main.87429071.chunk.css.map": "/serverless-faucet/static/css/main.87429071.chunk.css.map",
     "static/media/App.scss": "/serverless-faucet/static/media/Cantarell.8a31a1d0.ttf",
     "static/media/Lock.svg": "/serverless-faucet/static/media/Lock.eee4a708.svg",
-    "static/media/bch.svg": "/serverless-faucet/static/media/bch.e57f2d22.svg",
-    "static/media/btc.svg": "/serverless-faucet/static/media/btc.4ef09d53.svg",
-    "static/media/dai.svg": "/serverless-faucet/static/media/dai.a9d5285c.svg",
-    "static/media/eth.svg": "/serverless-faucet/static/media/eth.a0e920e8.svg",
-    "static/media/ren.svg": "/serverless-faucet/static/media/ren.8353410b.svg",
-    "static/media/zec.svg": "/serverless-faucet/static/media/zec.ef5cb6e2.svg"
+    "static/media/bch.e57f2d22.svg": "/serverless-faucet/static/media/bch.e57f2d22.svg",
+    "static/media/btc.4ef09d53.svg": "/serverless-faucet/static/media/btc.4ef09d53.svg",
+    "static/media/dai.a9d5285c.svg": "/serverless-faucet/static/media/dai.a9d5285c.svg",
+    "static/media/eth.a0e920e8.svg": "/serverless-faucet/static/media/eth.a0e920e8.svg",
+    "static/media/ren.8353410b.svg": "/serverless-faucet/static/media/ren.8353410b.svg",
+    "static/media/zec.ef5cb6e2.svg": "/serverless-faucet/static/media/zec.ef5cb6e2.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.67c4f786.js",
-    "static/js/2.816af36e.chunk.js",
-    "static/css/main.d2e0d3a4.chunk.css",
-    "static/js/main.08aa6bd6.chunk.js"
+    "static/js/2.27345fd9.chunk.js",
+    "static/css/main.87429071.chunk.css",
+    "static/js/main.76ddcb35.chunk.js"
   ]
 }
