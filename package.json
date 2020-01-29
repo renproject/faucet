@@ -4,8 +4,8 @@
   "private": true,
   "homepage": "https://renproject.github.io/serverless-faucet",
   "scripts": {
-    "start": ". ./.env || true; node scripts/start.js",
-    "build": ". ./.env || true; node scripts/build.js --max-old-space-size=4096",
+    "start": "node scripts/start.js",
+    "build": "node scripts/build.js --max-old-space-size=4096",
     "test": "node scripts/test.js --env=jsdom",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
