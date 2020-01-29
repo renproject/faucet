@@ -19,6 +19,10 @@ export enum Token {
     BTC = "BTC",
     ZEC = "ZEC",
     BCH = "BCH",
+
+    zBTC = "zBTC",
+    zBCH = "zBCH",
+    zZEC = "zZEC",
 }
 
 const getCryptoAccountToken = (token: Token) => {
@@ -32,6 +36,12 @@ const getCryptoAccountToken = (token: Token) => {
             return { type: "ERC20", address: "0x2CD647668494c1B15743AB283A0f980d90a87394" };
         case Token.DAI:
             return { type: "ERC20", address: "0xC4375B7De8af5a38a93548eb8453a498222C4fF2" };
+        case Token.zBTC:
+            return { type: "ERC20", address: "0xc6069E8DeA210C937A846db2CEbC0f58ca111f26" };
+        case Token.zBCH:
+            return { type: "ERC20", address: "0x7bdb2A8231eB4E4795749F01f0241940a8166575" };
+        case Token.zZEC:
+            return { type: "ERC20", address: "0xB9b5B5346BF8CA9bc02f4F9d8947916b7CA9C97E" };
     }
 }
 
@@ -39,6 +49,9 @@ const getExplorerLink = (token: Token, transactionHash: string) => {
     switch (token) {
         case Token.ETH:
         case Token.REN:
+        case Token.zBTC:
+        case Token.zBCH:
+        case Token.zZEC:
         case Token.DAI:
             return `https://kovan.etherscan.io/tx/${transactionHash}`;
         case Token.BTC:
@@ -56,7 +69,11 @@ export const TokenIcons = OrderedMap<string, React.FunctionComponent<React.SVGPr
     .set(Token.DAI, iconDAI)
     .set(Token.BTC, iconBTC)
     .set(Token.ZEC, iconZEC)
-    .set(Token.BCH, iconBCH);
+    .set(Token.BCH, iconBCH)
+    .set(Token.zBTC, iconBTC)
+    .set(Token.zZEC, iconZEC)
+    .set(Token.zBCH, iconBCH)
+    ;
 
 export const sendTokens = async (
     cryptoAccount: CryptoAccount,

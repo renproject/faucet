@@ -100,7 +100,7 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
                 {/*<input className="dashed input select-token"></input>*/}
                 <SelectToken
                     token={this.state.selectedToken}
-                    allTokens={TokenIcons.map((icon, token) => ({ label: token, image: icon, value: token, balance: balances.get(token, new BigNumber(0)) })).toMap()}
+                    allTokens={TokenIcons.map((icon, token) => ({ label: token, image: icon, value: token, balance: balances.get(token, new BigNumber(0)) }))}
                     onChange={this.handleSelect}
                     disabled={submitting}
                 />

@@ -38,6 +38,8 @@ Start the development server to [localhost:3000](http://localhost:3000):
 yarn start
 ```
 
+Customize `src/components/Lock.svg` with the desired logo or symbol.
+
 # Deploying to Github pages
 
 Update the `homepage` field in `package.json`:

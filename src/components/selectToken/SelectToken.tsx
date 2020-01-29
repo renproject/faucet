@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import Select from "react-select";
-import { Map } from "immutable";
+import { OrderedMap } from "immutable";
 import BigNumber from "bignumber.js";
 
 import { CustomOption, CustomValue, OptionType } from "./Select";
@@ -62,7 +62,7 @@ export class SelectToken<Token extends string> extends React.Component<Props<Tok
 
 interface Props<Token> {
     token: Token | undefined | null;
-    allTokens: Map<Token, OptionType>;
+    allTokens: OrderedMap<Token, OptionType>;
     disabled?: boolean;
     onChange(token: Token | undefined | null): void;
 }
