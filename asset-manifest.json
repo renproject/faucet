@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/faucet/static/css/main.d96d870e.chunk.css",
-    "main.js": "/faucet/static/js/main.b7e3a3bd.chunk.js",
-    "main.js.map": "/faucet/static/js/main.b7e3a3bd.chunk.js.map",
-    "runtime-main.js": "/faucet/static/js/runtime-main.4ecb6f23.js",
-    "runtime-main.js.map": "/faucet/static/js/runtime-main.4ecb6f23.js.map",
-    "static/js/2.cf619c41.chunk.js": "/faucet/static/js/2.cf619c41.chunk.js",
-    "static/js/2.cf619c41.chunk.js.map": "/faucet/static/js/2.cf619c41.chunk.js.map",
+    "main.css": "/faucet/static/css/main.c0fddce9.chunk.css",
+    "main.js": "/faucet/static/js/main.e0877d2d.chunk.js",
+    "main.js.map": "/faucet/static/js/main.e0877d2d.chunk.js.map",
+    "runtime-main.js": "/faucet/static/js/runtime-main.a022f55c.js",
+    "runtime-main.js.map": "/faucet/static/js/runtime-main.a022f55c.js.map",
+    "static/js/2.a84574b9.chunk.js": "/faucet/static/js/2.a84574b9.chunk.js",
+    "static/js/2.a84574b9.chunk.js.map": "/faucet/static/js/2.a84574b9.chunk.js.map",
     "index.html": "/faucet/index.html",
-    "precache-manifest.f6afe61d9ad588170094fd7e236a6bf2.js": "/faucet/precache-manifest.f6afe61d9ad588170094fd7e236a6bf2.js",
+    "precache-manifest.e2eb1e280dc91dd84b22841bf1d21c9d.js": "/faucet/precache-manifest.e2eb1e280dc91dd84b22841bf1d21c9d.js",
     "service-worker.js": "/faucet/service-worker.js",
-    "static/css/main.d96d870e.chunk.css.map": "/faucet/static/css/main.d96d870e.chunk.css.map",
-    "static/js/2.cf619c41.chunk.js.LICENSE.txt": "/faucet/static/js/2.cf619c41.chunk.js.LICENSE.txt",
+    "static/css/main.c0fddce9.chunk.css.map": "/faucet/static/css/main.c0fddce9.chunk.css.map",
+    "static/js/2.a84574b9.chunk.js.LICENSE.txt": "/faucet/static/js/2.a84574b9.chunk.js.LICENSE.txt",
     "static/media/App.scss": "/faucet/static/media/Cantarell.8a31a1d0.ttf",
     "static/media/Lock.eee4a708.svg": "/faucet/static/media/Lock.eee4a708.svg",
     "static/media/bch.07d6f5d7.svg": "/faucet/static/media/bch.07d6f5d7.svg",
@@ -25,9 +25,9 @@
     "static/media/zec.ef5cb6e2.svg": "/faucet/static/media/zec.ef5cb6e2.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.4ecb6f23.js",
-    "static/js/2.cf619c41.chunk.js",
-    "static/css/main.d96d870e.chunk.css",
-    "static/js/main.b7e3a3bd.chunk.js"
+    "static/js/runtime-main.a022f55c.js",
+    "static/js/2.a84574b9.chunk.js",
+    "static/css/main.c0fddce9.chunk.css",
+    "static/js/main.e0877d2d.chunk.js"
   ]
 }
