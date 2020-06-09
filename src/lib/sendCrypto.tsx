@@ -1,8 +1,8 @@
 import * as React from "react";
 
+import BigNumber from "bignumber.js";
 import { OrderedMap } from "immutable";
 import CryptoAccount from "send-crypto";
-import BigNumber from "bignumber.js";
 
 import { Message, MessageType } from "../components/Faucet";
 import { ReactComponent as iconBCH } from "../img/bch.svg";
@@ -10,6 +10,9 @@ import { ReactComponent as iconBTC } from "../img/btc.svg";
 import { ReactComponent as iconDAI } from "../img/dai.svg";
 import { ReactComponent as iconETH } from "../img/eth.svg";
 import { ReactComponent as iconREN } from "../img/ren.svg";
+import { ReactComponent as iconRenBCH } from "../img/renBCH.svg";
+import { ReactComponent as iconRenBTC } from "../img/renBTC.svg";
+import { ReactComponent as iconRenZEC } from "../img/renZEC.svg";
 import { ReactComponent as iconZEC } from "../img/zec.svg";
 
 export enum Token {
@@ -20,9 +23,9 @@ export enum Token {
     ZEC = "ZEC",
     BCH = "BCH",
 
-    zBTC = "zBTC",
-    zBCH = "zBCH",
-    zZEC = "zZEC",
+    testBTC = "testBTC",
+    testBCH = "testBCH",
+    testZEC = "testZEC",
 }
 
 const getCryptoAccountToken = (token: Token) => {
@@ -36,22 +39,22 @@ const getCryptoAccountToken = (token: Token) => {
             return { type: "ERC20", address: "0x2CD647668494c1B15743AB283A0f980d90a87394" };
         case Token.DAI:
             return { type: "ERC20", address: "0xC4375B7De8af5a38a93548eb8453a498222C4fF2" };
-        case Token.zBTC:
-            return { type: "ERC20", address: "0xc6069E8DeA210C937A846db2CEbC0f58ca111f26" };
-        case Token.zBCH:
-            return { type: "ERC20", address: "0x7bdb2A8231eB4E4795749F01f0241940a8166575" };
-        case Token.zZEC:
-            return { type: "ERC20", address: "0xB9b5B5346BF8CA9bc02f4F9d8947916b7CA9C97E" };
+        case Token.testBTC:
+            return { type: "ERC20", address: "0x0A9ADD98C076448CBcFAcf5E457DA12ddbEF4A8f" };
+        case Token.testBCH:
+            return { type: "ERC20", address: "0x618dC53e856b1A601119F2Fed5F1E873bCf7Bd6e" };
+        case Token.testZEC:
+            return { type: "ERC20", address: "0x42805DA220DF1f8a33C16B0DF9CE876B9d416610" };
     }
-}
+};
 
 const getExplorerLink = (token: Token, transactionHash: string) => {
     switch (token) {
         case Token.ETH:
         case Token.REN:
-        case Token.zBTC:
-        case Token.zBCH:
-        case Token.zZEC:
+        case Token.testBTC:
+        case Token.testBCH:
+        case Token.testZEC:
         case Token.DAI:
             return `https://kovan.etherscan.io/tx/${transactionHash}`;
         case Token.BTC:
@@ -61,18 +64,21 @@ const getExplorerLink = (token: Token, transactionHash: string) => {
         case Token.BCH:
             return `https://explorer.bitcoin.com/tbch/tx/${transactionHash}`;
     }
-}
+};
 
 export const TokenIcons = OrderedMap<string, React.FunctionComponent<React.SVGProps<SVGSVGElement>>>()
+    // ETH and ERC20s
     .set(Token.ETH, iconETH)
     .set(Token.REN, iconREN)
     .set(Token.DAI, iconDAI)
+    // Other cryptocurrencies
     .set(Token.BTC, iconBTC)
     .set(Token.ZEC, iconZEC)
     .set(Token.BCH, iconBCH)
-    .set(Token.zBTC, iconBTC)
-    .set(Token.zZEC, iconZEC)
-    .set(Token.zBCH, iconBCH)
+    // Shifted tokens
+    .set(Token.testBTC, iconRenBTC)
+    .set(Token.testZEC, iconRenZEC)
+    .set(Token.testBCH, iconRenBCH)
     ;
 
 export const sendTokens = async (
@@ -82,7 +88,7 @@ export const sendTokens = async (
     amount: string,
     addMessage: (msg: Message) => void,
 ): Promise<void> => {
-    if (isNaN(parseInt(amount))) {
+    if (isNaN(parseInt(amount, 10))) {
         throw new Error(`Invalid amount ${amount}`);
     }
     try {
@@ -111,6 +117,7 @@ export const sendTokens = async (
 
 export const balanceOf = (cryptoAccount: CryptoAccount, token: Token): Promise<BigNumber> => cryptoAccount.balanceOf<BigNumber>(getCryptoAccountToken(token), { bn: BigNumber });
 
+// tslint:disable-next-line: no-any
 export const extractError = (error: any): string => {
     if (typeof error === "object") {
         if (error.response) { return extractError(error.response); }

@@ -15,6 +15,7 @@ export const Addresses = ({ cryptoAccount }: { cryptoAccount: CryptoAccount }) =
             cryptoAccount.address("ZEC").then(setZECAddress);
             cryptoAccount.address("BCH").then(setBCHAddress);
         })().catch(console.error);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const [showingAddresses, setShowingAddresses] = React.useState(false);
@@ -26,14 +27,14 @@ export const Addresses = ({ cryptoAccount }: { cryptoAccount: CryptoAccount }) =
     return <div className="show-addresses" >
         {showingAddresses ?
             <span style={{ position: "absolute", top: "20px", right: "20px" }}>
-                ETH address: {ETHAddress || ""}<br />
-                BTC address: {BTCAddress || ""}<br />
-                ZEC address: {ZECAddress || ""}<br />
-                BCH address: {BCHAddress || ""}
+                <p><span>ETH address:</span> <div>{ETHAddress || ""}</div></p>
+                <p><span>BTC address:</span> <div>{BTCAddress || ""}</div></p>
+                <p><span>ZEC address:</span> <div>{ZECAddress || ""}</div></p>
+                <p><span>BCH address:</span> <div>{BCHAddress || ""}</div></p>
             </span> :
             <span onClick={showAddresses} role="button" className="show-addresses-button" style={{ cursor: "pointer", position: "absolute", top: "20px", right: "20px" }}>
                 Show addresses
             </span>
         }
     </div>;
-}
+};

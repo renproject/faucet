@@ -1,101 +1,41 @@
 {
-  "name": "serverless-faucet",
+  "name": "faucet",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://renproject.github.io/serverless-faucet",
-  "scripts": {
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js --max-old-space-size=4096",
-    "test": "node scripts/test.js --env=jsdom",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
-  },
+  "homepage": "https://renproject.github.io/faucet",
   "dependencies": {
-    "@babel/core": "7.7.7",
-    "@svgr/webpack": "5.0.1",
-    "@types/bchaddrjs": "^0.4.0",
-    "@types/bignumber.js": "^5.0.0",
-    "@types/crypto-js": "^3.1.43",
-    "@types/query-string": "^6.3.0",
-    "@types/react-input-autosize": "^2.0.1",
-    "@types/react-select": "^3.0.8",
-    "@types/underscore": "^1.9.4",
-    "@typescript-eslint/eslint-plugin": "^2.15.0",
-    "@typescript-eslint/parser": "^2.15.0",
-    "axios": "^0.19.1",
-    "babel-eslint": "10.0.3",
-    "babel-jest": "^24.9.0",
-    "babel-loader": "8.0.6",
-    "babel-plugin-named-asset-import": "^0.3.5",
-    "babel-preset-react-app": "^9.1.0",
-    "bchaddrjs": "^0.4.5",
+    "@types/crypto-js": "^3.1.47",
+    "@types/node": "^14.0.12",
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-input-autosize": "^2.0.2",
+    "@types/react-select": "^3.0.13",
     "bignumber.js": "^9.0.0",
-    "camelcase": "^5.3.1",
-    "case-sensitive-paths-webpack-plugin": "2.2.0",
-    "crypto-js": "^3.1.9-1",
-    "css-loader": "3.4.1",
-    "dotenv": "8.2.0",
-    "dotenv-expand": "5.1.0",
+    "crypto-js": "^4.0.0",
     "emotion": "^10.0.27",
-    "eslint": "^6.8.0",
-    "eslint-config-react-app": "^5.1.0",
-    "eslint-loader": "3.0.3",
-    "eslint-plugin-flowtype": "4.5.3",
-    "eslint-plugin-import": "2.19.1",
-    "eslint-plugin-jsx-a11y": "6.2.3",
-    "eslint-plugin-react": "7.17.0",
-    "eslint-plugin-react-hooks": "^2.3.0",
-    "file-loader": "5.0.2",
-    "fs-extra": "8.1.0",
-    "html-webpack-plugin": "4.0.0-beta.5",
-    "identity-obj-proxy": "3.0.0",
     "immutable": "^4.0.0-rc.12",
-    "is-wsl": "^2.1.1",
-    "jest": "24.9.0",
-    "jest-environment-jsdom-fourteen": "1.0.1",
-    "jest-resolve": "24.9.0",
-    "jest-watch-typeahead": "0.4.2",
-    "localforage": "^1.7.3",
-    "mini-css-extract-plugin": "0.9.0",
-    "node-sass": "^4.13.0",
-    "optimize-css-assets-webpack-plugin": "5.0.3",
-    "pnp-webpack-plugin": "1.5.0",
-    "postcss-flexbugs-fixes": "4.1.0",
-    "postcss-loader": "3.0.0",
-    "postcss-normalize": "8.0.1",
-    "postcss-preset-env": "6.7.0",
-    "postcss-safe-parser": "4.0.1",
-    "query-string": "^6.9.0",
-    "react": "^16.12.0",
-    "react-app-polyfill": "^1.0.5",
-    "react-dev-utils": "^10.0.0",
-    "react-dom": "^16.12.0",
+    "localforage": "^1.7.4",
+    "node-sass": "^4.14.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-input-autosize": "^2.2.2",
-    "react-select": "^3.0.8",
-    "resolve": "1.14.2",
-    "resolve-url-loader": "3.1.1",
-    "sass-loader": "8.0.0",
-    "semver": "7.1.1",
-    "send-crypto": "^0.1.11",
-    "style-loader": "1.1.2",
-    "terser-webpack-plugin": "2.3.1",
-    "ts-pnp": "1.1.5",
-    "url-loader": "3.0.0",
-    "web3": "1.2.4",
-    "webpack": "4.41.5",
-    "webpack-dev-server": "3.10.1",
-    "webpack-manifest-plugin": "2.2.0",
-    "workbox-webpack-plugin": "4.3.1"
+    "react-scripts": "3.4.1",
+    "react-select": "^3.1.0",
+    "send-crypto": "^0.2.3",
+    "typescript": "^3.9.5"
   },
   "devDependencies": {
-    "@babel/helper-create-regexp-features-plugin": "^7.7.4",
-    "@types/jest": "^24.0.25",
-    "@types/node": "^13.1.5",
-    "@types/react": "^16.9.17",
-    "@types/react-dom": "^16.9.4",
-    "gh-pages": "2.2.0",
-    "tslint-microsoft-contrib": "^6.2.0",
-    "typescript": "^3.7.4"
+    "gh-pages": "^3.0.0",
+    "tslint": "^6.1.2",
+    "tslint-microsoft-contrib": "^6.2.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   },
   "browserslist": {
     "production": [
@@ -108,61 +48,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "jest": {
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "jest-environment-jsdom-fourteen",
-    "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "modulePaths": [],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "watchPlugins": [
-      "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
-    ]
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   }
 }

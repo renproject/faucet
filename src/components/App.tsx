@@ -12,6 +12,6 @@ const App = () => {
             {privateKey === null ? <Unlock unlockCallback={setPrivateKey} /> : <Faucet privateKey={privateKey} />}
         </div>
     );
-}
+};
 
 export default App;

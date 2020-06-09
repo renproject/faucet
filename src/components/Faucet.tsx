@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import { List, OrderedMap } from "immutable";
 import BigNumber from "bignumber.js";
+import { List, OrderedMap } from "immutable";
 import AutosizeInput from "react-input-autosize";
 import CryptoAccount from "send-crypto";
 
@@ -23,7 +23,7 @@ export interface Message {
 interface FaucetState {
     recipient: string;
     value: string;
-    selectedToken: string | null | undefined,
+    selectedToken: string | null | undefined;
 
     messages: List<Message>;
 
@@ -71,7 +71,7 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             await Promise.all(TokenIcons.map((async (_icon, token: Token) => {
                 try {
                     const balance = await balanceOf(cryptoAccount, token);
-                    (this.setState(state => ({ ...state, balances: state.balances.set(token, balance) })));
+                    this.setState(state => ({ ...state, balances: state.balances.set(token, balance) }));
                 } catch (error) {
                     console.error(error);
                 }
@@ -81,7 +81,7 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             if (this.timeout) { clearTimeout(this.timeout); }
             this.timeout = setTimeout(loop, 30 * 1000);
         };
-        loop();
+        loop().catch(console.error);
     }
 
     public componentWillUnmount() {
@@ -132,16 +132,16 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
         this.setState({ messages: messages.push(msg) });
     }
 
-    private handleSelect = (selectedToken: string): void => {
+    private readonly handleSelect = (selectedToken: string): void => {
         this.setState({ selectedToken });
-    };
+    }
 
-    private handleInput = (event: React.FormEvent<HTMLInputElement>): void => {
+    private readonly handleInput = (event: React.FormEvent<HTMLInputElement>): void => {
         const element = (event.target as HTMLInputElement);
         this.setState((state) => ({ ...state, [element.name]: element.value }));
     }
 
-    private handleFaucet = async (event: React.FormEvent<HTMLFormElement>) => {
+    private readonly handleFaucet = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const { recipient, cryptoAccount, selectedToken, value, submitting } = this.state;
         if (!selectedToken || recipient === "" || value === "" || submitting) {

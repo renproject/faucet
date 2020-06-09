@@ -1,9 +1,9 @@
 import * as React from "react";
 
+import BigNumber from "bignumber.js";
 import { css } from "emotion";
 import { OptionProps } from "react-select/src/components/Option";
 import { SingleValueProps } from "react-select/src/components/SingleValue";
-import BigNumber from "bignumber.js";
 
 export interface OptionType { label: string; value: string; balance: BigNumber; image: React.FunctionComponent<React.SVGProps<SVGSVGElement>>; }
 

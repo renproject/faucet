@@ -1,8 +1,7 @@
 import * as React from "react";
 
-import Select from "react-select";
 import { OrderedMap } from "immutable";
-import BigNumber from "bignumber.js";
+import Select from "react-select";
 
 import { CustomOption, CustomValue, OptionType } from "./Select";
 import "./styles.scss";

@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import localforage from "localforage";
 import { AES, enc, SHA256 } from "crypto-js";
+import localforage from "localforage";
 
 import { Loading } from "./Loading";
 import { ReactComponent as Lock } from "./Lock.svg";
@@ -14,38 +14,19 @@ interface UnlockProps {
 const cipher = process.env.REACT_APP_PRIVATE_KEY_CIPHER || "";
 
 const Unlock = ({ unlockCallback }: UnlockProps) => {
-    let [password, setPassword] = React.useState("");
+    const [password, setPassword] = React.useState("");
     const [error, setError] = React.useState<string | null>(null);
     const [loading, setLoading] = React.useState(false);
 
     const updatePassword = (event: React.FormEvent<HTMLInputElement>): void => {
         const element = (event.target as HTMLInputElement);
-        password = element.value
-        setPassword(password);
-    }
+        setPassword(element.value);
+    };
 
-    const handleUnlock = React.useCallback((event?: React.FormEvent<HTMLFormElement>) => {
-        if (event) {
-            event.preventDefault();
-        }
+    const checkPassword = React.useCallback(async (passwordToCheck: string) => {
+        const originalPassword = passwordToCheck;
 
-        setLoading(true);
-        setError(null);
-
-        setTimeout(() => {
-            checkPassword(password)
-                .then(() => setLoading(false))
-                .catch((err) => {
-                    console.error(err);
-                    setLoading(false);
-                });
-        }, 100);
-    }, [password]);
-
-    const checkPassword = React.useCallback(async (password: string) => {
-        const originalPassword = password;
-
-        let passwordHash = password;
+        let passwordHash = passwordToCheck;
         // This doesn't improve the encryption security, but slows down password
         // attempts in the front-end.
         for (let i = 0; i < 100000; i++) {
@@ -66,7 +47,7 @@ const Unlock = ({ unlockCallback }: UnlockProps) => {
             return;
         }
 
-        localforage.setItem("faucet-password", originalPassword);
+        localforage.setItem("faucet-password", originalPassword).catch(console.error);
 
         if (unlockCallback) {
             unlockCallback(privateKey);
@@ -75,22 +56,42 @@ const Unlock = ({ unlockCallback }: UnlockProps) => {
         }
     }, [unlockCallback]);
 
+    const handleUnlock = React.useCallback((passwordParam?: string) => {
+        setLoading(true);
+        setError(null);
+
+        setTimeout(() => {
+            checkPassword(passwordParam || password)
+                .then(() => { setLoading(false); })
+                .catch((err) => {
+                    console.error(err);
+                    setLoading(false);
+                });
+        }, 100);
+    }, [password, checkPassword]);
+
+    const handleUnlockForm = React.useCallback((event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        handleUnlock();
+    }, [handleUnlock]);
+
     React.useEffect(() => {
         (async () => {
             const storedPassword = await localforage.getItem<string>("faucet-password");
             if (storedPassword) {
-                password = storedPassword;
-                setPassword(password);
-                setTimeout(handleUnlock, 100);
+                setPassword(storedPassword);
+                handleUnlock(storedPassword);
             }
-        })().catch(console.error)
+        })().catch(console.error);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
         <>
             <div className="Unlock">
                 <Lock className="logo" />
-                <form onSubmit={handleUnlock}>
+                <form onSubmit={handleUnlockForm}>
                     <input
                         className="password"
                         placeholder="Password"
@@ -107,6 +108,6 @@ const Unlock = ({ unlockCallback }: UnlockProps) => {
             </div>
         </>
     );
-}
+};
 
 export default Unlock;
