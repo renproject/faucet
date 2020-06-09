@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/faucet/static/css/main.c0fddce9.chunk.css",
-    "main.js": "/faucet/static/js/main.2187c743.chunk.js",
-    "main.js.map": "/faucet/static/js/main.2187c743.chunk.js.map",
+    "main.js": "/faucet/static/js/main.10223a6a.chunk.js",
+    "main.js.map": "/faucet/static/js/main.10223a6a.chunk.js.map",
     "runtime-main.js": "/faucet/static/js/runtime-main.34ba40dc.js",
     "runtime-main.js.map": "/faucet/static/js/runtime-main.34ba40dc.js.map",
     "static/js/2.dfdc8ebe.chunk.js": "/faucet/static/js/2.dfdc8ebe.chunk.js",
     "static/js/2.dfdc8ebe.chunk.js.map": "/faucet/static/js/2.dfdc8ebe.chunk.js.map",
     "index.html": "/faucet/index.html",
-    "precache-manifest.c0f3c552123ff60657573b754f672583.js": "/faucet/precache-manifest.c0f3c552123ff60657573b754f672583.js",
+    "precache-manifest.1c02703add24859d54f0f50c64fc8005.js": "/faucet/precache-manifest.1c02703add24859d54f0f50c64fc8005.js",
     "service-worker.js": "/faucet/service-worker.js",
     "static/css/main.c0fddce9.chunk.css.map": "/faucet/static/css/main.c0fddce9.chunk.css.map",
     "static/media/App.scss": "/faucet/static/media/Cantarell.8a31a1d0.ttf",
@@ -27,6 +27,6 @@
     "static/js/runtime-main.34ba40dc.js",
     "static/js/2.dfdc8ebe.chunk.js",
     "static/css/main.c0fddce9.chunk.css",
-    "static/js/main.2187c743.chunk.js"
+    "static/js/main.10223a6a.chunk.js"
   ]
 }
