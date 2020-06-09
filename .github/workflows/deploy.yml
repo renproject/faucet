@@ -3,7 +3,7 @@ name: deploy
 on:
   push:
     branches:
-      - master         # Push events on master branch
+      - deploy         # Push events on master branch
 
 jobs:
   deploy:

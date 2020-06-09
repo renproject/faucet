@@ -93,7 +93,7 @@ export const sendTokens = async (
     }
     try {
         const txHash: string = await new Promise((resolve, reject) => {
-            cryptoAccount.send(recipient, amount, getCryptoAccountToken(token)).on("transactionHash", resolve).catch(reject);
+            cryptoAccount.send(recipient, parseInt(amount, 10), getCryptoAccountToken(token)).on("transactionHash", resolve).catch(reject);
         });
         addMessage({
             type: MessageType.INFO,

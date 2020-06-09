@@ -2,6 +2,8 @@ import * as React from "react";
 
 import CryptoAccount from "send-crypto";
 
+const { version } = require("../../package.json");
+
 export const Addresses = ({ cryptoAccount }: { cryptoAccount: CryptoAccount }) => {
     const [ETHAddress, setETHAddress] = React.useState<string | null>(null);
     const [BTCAddress, setBTCAddress] = React.useState<string | null>(null);
@@ -10,10 +12,10 @@ export const Addresses = ({ cryptoAccount }: { cryptoAccount: CryptoAccount }) =
 
     React.useEffect(() => {
         (async () => {
-            cryptoAccount.address("ETH").then(setETHAddress);
-            cryptoAccount.address("BTC").then(setBTCAddress);
-            cryptoAccount.address("ZEC").then(setZECAddress);
-            cryptoAccount.address("BCH").then(setBCHAddress);
+            cryptoAccount.address("ETH").then(setETHAddress).catch(console.error);
+            cryptoAccount.address("BTC").then(setBTCAddress).catch(console.error);
+            cryptoAccount.address("ZEC").then(setZECAddress).catch(console.error);
+            cryptoAccount.address("BCH").then(setBCHAddress).catch(console.error);
         })().catch(console.error);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -27,6 +29,7 @@ export const Addresses = ({ cryptoAccount }: { cryptoAccount: CryptoAccount }) =
     return <div className="show-addresses" >
         {showingAddresses ?
             <span style={{ position: "absolute", top: "20px", right: "20px" }}>
+                <p>Version {version}</p>
                 <p><span>ETH address:</span> <div>{ETHAddress || ""}</div></p>
                 <p><span>BTC address:</span> <div>{BTCAddress || ""}</div></p>
                 <p><span>ZEC address:</span> <div>{ZECAddress || ""}</div></p>
