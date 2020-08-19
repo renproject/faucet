@@ -1,16 +1,13 @@
 import * as React from "react";
 
 import BigNumber from "bignumber.js";
-import { css } from "emotion";
 import { OptionProps } from "react-select/src/components/Option";
 import { SingleValueProps } from "react-select/src/components/SingleValue";
 
 export interface OptionType { label: string; value: string; balance: BigNumber; image: React.FunctionComponent<React.SVGProps<SVGSVGElement>>; }
 
-const extendClassName = (className: string | undefined | void, extra: string) => !className ? extra : `${className} ${extra}`;
-
 export const CustomValue = <X extends OptionType>(props: SingleValueProps<X>) => {
-    const { className, cx, getStyles, isDisabled, innerProps, children: propChilren } = props;
+    const { className, cx, isDisabled, innerProps, children: propChilren } = props;
 
     const option = props.data;
     const children = <>
@@ -20,15 +17,13 @@ export const CustomValue = <X extends OptionType>(props: SingleValueProps<X>) =>
 
     return (
         <div
-            className={extendClassName(cx(
-                // tslint:disable-next-line: no-any
-                css(getStyles("singleValue", props)),
+            // tslint:disable-next-line: no-any
+            className={(cx as any)(
                 {
                     "single-value": true,
-                    "single-value--is-disabled": isDisabled
+                    "single-value--is-disabled": isDisabled,
                 },
-                className),
-                "Select--currency__value",
+                className + " Select--currency__value",
             )}
             {...innerProps}
         >
@@ -38,29 +33,23 @@ export const CustomValue = <X extends OptionType>(props: SingleValueProps<X>) =>
 };
 
 export const CustomOption = <X extends OptionType>(props: OptionProps<X>) => {
-    const { children, className, cx, getStyles, isDisabled, isFocused, isSelected, innerRef, innerProps } = props;
+    const { children, className, cx, isDisabled, isFocused, isSelected, innerRef, innerProps } = props;
 
     const option = props.data as X;
 
     return (
         <div
             ref={innerRef}
-            className={
-                extendClassName(
-                    extendClassName(
-                        cx(
-                            css(getStyles("option", props)),
-                            {
-                                option: true,
-                                "option--is-disabled": isDisabled,
-                                "option--is-focused": isFocused,
-                                "option--is-selected": isSelected,
-                            },
-                            className,
-                        ),
-                        "Select--currency__option"),
-                    isSelected ? "Select--currency__option--selected" : ""
-                )}
+            // tslint:disable-next-line: no-any
+            className={[(cx as any)(
+                {
+                    option: true,
+                    "option--is-disabled": isDisabled,
+                    "option--is-focused": isFocused,
+                    "option--is-selected": isSelected,
+                },
+                className
+            ), isSelected ? "Select--currency__option--selected" : ""].join(" ")}
             {...innerProps}
         >
             {React.createElement(option.image)}
