@@ -1,32 +1,31 @@
 {
   "files": {
-    "main.css": "/faucet/static/css/main.c0fddce9.chunk.css",
-    "main.js": "/faucet/static/js/main.8cfc5cbc.chunk.js",
-    "main.js.map": "/faucet/static/js/main.8cfc5cbc.chunk.js.map",
+    "main.css": "/faucet/static/css/main.8084c691.chunk.css",
+    "main.js": "/faucet/static/js/main.a5ceb55e.chunk.js",
+    "main.js.map": "/faucet/static/js/main.a5ceb55e.chunk.js.map",
     "runtime-main.js": "/faucet/static/js/runtime-main.34ba40dc.js",
     "runtime-main.js.map": "/faucet/static/js/runtime-main.34ba40dc.js.map",
-    "static/js/2.9ed5ef29.chunk.js": "/faucet/static/js/2.9ed5ef29.chunk.js",
-    "static/js/2.9ed5ef29.chunk.js.map": "/faucet/static/js/2.9ed5ef29.chunk.js.map",
+    "static/js/2.2c842345.chunk.js": "/faucet/static/js/2.2c842345.chunk.js",
+    "static/js/2.2c842345.chunk.js.map": "/faucet/static/js/2.2c842345.chunk.js.map",
     "index.html": "/faucet/index.html",
-    "precache-manifest.12ac186aa9ef23c0d96eae4da0082af1.js": "/faucet/precache-manifest.12ac186aa9ef23c0d96eae4da0082af1.js",
-    "service-worker.js": "/faucet/service-worker.js",
-    "static/css/main.c0fddce9.chunk.css.map": "/faucet/static/css/main.c0fddce9.chunk.css.map",
-    "static/media/App.scss": "/faucet/static/media/Cantarell.8a31a1d0.ttf",
-    "static/media/Lock.eee4a708.svg": "/faucet/static/media/Lock.eee4a708.svg",
-    "static/media/bch.07d6f5d7.svg": "/faucet/static/media/bch.07d6f5d7.svg",
-    "static/media/btc.4ef09d53.svg": "/faucet/static/media/btc.4ef09d53.svg",
-    "static/media/dai.a9d5285c.svg": "/faucet/static/media/dai.a9d5285c.svg",
-    "static/media/eth.a0e920e8.svg": "/faucet/static/media/eth.a0e920e8.svg",
-    "static/media/ren.8353410b.svg": "/faucet/static/media/ren.8353410b.svg",
-    "static/media/renBCH.150b101d.svg": "/faucet/static/media/renBCH.150b101d.svg",
-    "static/media/renBTC.c3f431ce.svg": "/faucet/static/media/renBTC.c3f431ce.svg",
-    "static/media/renZEC.c6902a6d.svg": "/faucet/static/media/renZEC.c6902a6d.svg",
-    "static/media/zec.ef5cb6e2.svg": "/faucet/static/media/zec.ef5cb6e2.svg"
+    "static/css/main.8084c691.chunk.css.map": "/faucet/static/css/main.8084c691.chunk.css.map",
+    "static/media/App.scss": "/faucet/static/media/Cantarell.771a81c0.ttf",
+    "static/media/Lock.352848fb.svg": "/faucet/static/media/Lock.352848fb.svg",
+    "static/media/bch.d3543778.svg": "/faucet/static/media/bch.d3543778.svg",
+    "static/media/btc.807489f4.svg": "/faucet/static/media/btc.807489f4.svg",
+    "static/media/dai.9f1d001b.svg": "/faucet/static/media/dai.9f1d001b.svg",
+    "static/media/eth.198f135b.svg": "/faucet/static/media/eth.198f135b.svg",
+    "static/media/fil.f25f4794.png": "/faucet/static/media/fil.f25f4794.png",
+    "static/media/ren.a0a5bbb1.svg": "/faucet/static/media/ren.a0a5bbb1.svg",
+    "static/media/renBCH.4e481efb.svg": "/faucet/static/media/renBCH.4e481efb.svg",
+    "static/media/renBTC.4cdb5282.svg": "/faucet/static/media/renBTC.4cdb5282.svg",
+    "static/media/renZEC.259eaf0b.svg": "/faucet/static/media/renZEC.259eaf0b.svg",
+    "static/media/zec.dd6d71f0.svg": "/faucet/static/media/zec.dd6d71f0.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.34ba40dc.js",
-    "static/js/2.9ed5ef29.chunk.js",
-    "static/css/main.c0fddce9.chunk.css",
-    "static/js/main.8cfc5cbc.chunk.js"
+    "static/js/2.2c842345.chunk.js",
+    "static/css/main.8084c691.chunk.css",
+    "static/js/main.a5ceb55e.chunk.js"
   ]
 }
