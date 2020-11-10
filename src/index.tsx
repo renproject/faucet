@@ -7,6 +7,6 @@ import App from "./components/App";
 import { _catch_ } from "./components/ErrorBoundary";
 
 ReactDOM.render(
-  _catch_(<App />),
-  document.getElementById("root") as HTMLElement
+    _catch_(<App />),
+    document.getElementById("root") as HTMLElement,
 );

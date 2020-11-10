@@ -8,7 +8,8 @@ export interface OptionType {
     label: string;
     value: string;
     balance: BigNumber;
-    image: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+    image: React.FC;
+    disabled?: boolean;
 }
 
 export const CustomValue = <X extends OptionType>(
@@ -69,7 +70,7 @@ export const CustomOption = <X extends OptionType>(props: OptionProps<X>) => {
                 (cx as any)(
                     {
                         option: true,
-                        "option--is-disabled": isDisabled,
+                        "option--is-disabled": isDisabled || option.disabled,
                         "option--is-focused": isFocused,
                         "option--is-selected": isSelected,
                     },
@@ -77,6 +78,9 @@ export const CustomOption = <X extends OptionType>(props: OptionProps<X>) => {
                 ),
                 isSelected ? "Select--currency__option--selected" : "",
             ].join(" ")}
+            style={
+                option.disabled ? { opacity: 0.5, cursor: "not-allowed" } : {}
+            }
             {...innerProps}
         >
             {React.createElement(option.image)}

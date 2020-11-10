@@ -1,7 +1,6 @@
 import * as React from "react";
 
-interface Props {
-}
+interface Props {}
 
 interface State {
     error: null | Error;
@@ -19,7 +18,7 @@ class ErrorBoundary extends React.Component<Props, State> {
             error,
             errorInfo,
         });
-    }
+    };
 
     /**
      * The main render function.
@@ -45,8 +44,6 @@ class ErrorBoundary extends React.Component<Props, State> {
 }
 
 // tslint:disable-next-line: variable-name
-export const _catch_ = (
-    children: React.ReactNode,
-) => <ErrorBoundary>
-        {children}
-    </ErrorBoundary>;
+export const _catch_ = (children: React.ReactNode) => (
+    <ErrorBoundary>{children}</ErrorBoundary>
+);

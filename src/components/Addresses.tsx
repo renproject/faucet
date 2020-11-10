@@ -3,9 +3,14 @@ import * as React from "react";
 import { OrderedMap } from "immutable";
 import CryptoAccount from "send-crypto";
 
-import { addressSectionTokens } from "../lib/sendCrypto";
+import { getAddress } from "../lib/sendCrypto";
+import { Tokens } from "../tokens";
 
 const { version } = require("../../package.json");
+
+const TokensForAddressBox = Tokens.filter(
+    (tokenDetails) => tokenDetails.showAddress,
+);
 
 export const Addresses = ({
     cryptoAccount,
@@ -18,16 +23,15 @@ export const Addresses = ({
 
     React.useEffect(() => {
         (async () => {
-            for (const token of addressSectionTokens) {
-                cryptoAccount
-                    .address(token)
+            TokensForAddressBox.forEach((token) => {
+                getAddress(cryptoAccount, token)
                     .then((address) => {
                         setAddresses((currentAddresses) =>
-                            currentAddresses.set(token, address),
+                            currentAddresses.set(token.name, address),
                         );
                     })
                     .catch(console.error);
-            }
+            });
         })().catch(console.error);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -45,12 +49,12 @@ export const Addresses = ({
                     style={{ position: "absolute", top: "20px", right: "20px" }}
                 >
                     <p>Version {version}</p>
-                    {addressSectionTokens.map((token) => (
+                    {TokensForAddressBox.map((token) => (
                         <p>
-                            <span>{token} address:</span>{" "}
-                            <div>{addresses.get(token) || ""}</div>
+                            <span>{token.name} address:</span>{" "}
+                            <div>{addresses.get(token.name) || ""}</div>
                         </p>
-                    ))}
+                    )).valueSeq()}
                 </span>
             ) : (
                 <span

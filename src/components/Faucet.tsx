@@ -5,13 +5,8 @@ import { List, OrderedMap } from "immutable";
 import AutosizeInput from "react-input-autosize";
 import CryptoAccount from "send-crypto";
 
-import {
-    balanceOf,
-    extractError,
-    sendTokens,
-    Token,
-    TokenIcons,
-} from "../lib/sendCrypto";
+import { balanceOf, extractError, sendTokens } from "../lib/sendCrypto";
+import { Tokens } from "../tokens";
 import { Addresses } from "./Addresses";
 import { SelectToken } from "./selectToken/SelectToken";
 
@@ -82,12 +77,18 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             this.setState({ balancesLoading: true });
 
             await Promise.all(
-                TokenIcons.map(async (_icon, token: Token) => {
+                Tokens.map(async (tokenDetails) => {
                     try {
-                        const balance = await balanceOf(cryptoAccount, token);
+                        const balance = await balanceOf(
+                            cryptoAccount,
+                            tokenDetails,
+                        );
                         this.setState((state) => ({
                             ...state,
-                            balances: state.balances.set(token, balance),
+                            balances: state.balances.set(
+                                tokenDetails.name,
+                                balance,
+                            ),
                         }));
                     } catch (error) {
                         console.error(error);
@@ -135,11 +136,17 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
                     {/*<input className="dashed input select-token"></input>*/}
                     <SelectToken
                         token={this.state.selectedToken}
-                        allTokens={TokenIcons.map((icon, token) => ({
-                            label: token,
-                            image: icon,
-                            value: token,
-                            balance: balances.get(token, new BigNumber(0)),
+                        allTokens={Tokens.map((tokenDetails, name) => ({
+                            label: tokenDetails.name,
+                            image:
+                                tokenDetails.icon ||
+                                (() => <img role="presentation" alt="" />),
+                            value: name,
+                            disabled: tokenDetails.disabled,
+                            balance: balances.get(
+                                tokenDetails.name,
+                                new BigNumber(0),
+                            ),
                         }))}
                         onChange={this.handleSelect}
                         disabled={submitting}
@@ -203,6 +210,10 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
     };
 
     private readonly handleSelect = (selectedToken: string): void => {
+        // Reset messages.
+        if (selectedToken !== this.state.selectedToken) {
+            this.setState({ messages: List() });
+        }
         this.setState({ selectedToken });
     };
 
@@ -230,10 +241,16 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
         }
 
         this.setState({ submitting: true, messages: List() });
+        const tokenDetails = Tokens.get(selectedToken);
+        if (!tokenDetails) {
+            throw new Error(
+                `Unable to find token details for ${selectedToken}`,
+            );
+        }
         try {
             await sendTokens(
                 cryptoAccount,
-                selectedToken as Token,
+                tokenDetails,
                 recipient,
                 value,
                 params,

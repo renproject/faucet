@@ -19,66 +19,84 @@ const Unlock = ({ unlockCallback }: UnlockProps) => {
     const [loading, setLoading] = React.useState(false);
 
     const updatePassword = (event: React.FormEvent<HTMLInputElement>): void => {
-        const element = (event.target as HTMLInputElement);
+        const element = event.target as HTMLInputElement;
         setPassword(element.value);
     };
 
-    const checkPassword = React.useCallback(async (passwordToCheck: string) => {
-        const originalPassword = passwordToCheck;
+    const checkPassword = React.useCallback(
+        async (passwordToCheck: string) => {
+            const originalPassword = passwordToCheck;
 
-        let passwordHash = passwordToCheck;
-        // This doesn't improve the encryption security, but slows down password
-        // attempts in the front-end.
-        for (let i = 0; i < 100000; i++) {
-            passwordHash = SHA256(passwordHash) as unknown as string;
-        }
-        passwordHash = passwordHash.toString();
-
-        // Decrypt
-        let privateKey: string;
-        try {
-            privateKey = AES.decrypt(cipher.toString(), passwordHash).toString(enc.Utf8);
-            if (privateKey === "") {
-                throw new Error("Access Denied");
+            let passwordHash = passwordToCheck;
+            // This doesn't improve the encryption security, but slows down password
+            // attempts in the front-end.
+            for (let i = 0; i < 100000; i++) {
+                passwordHash = (SHA256(passwordHash) as unknown) as string;
             }
-        } catch (err) {
-            console.error(err);
-            setError("Access Denied");
-            return;
-        }
+            passwordHash = passwordHash.toString();
 
-        localforage.setItem("faucet-password", originalPassword).catch(console.error);
+            // Decrypt
+            let privateKey: string;
+            try {
+                privateKey = AES.decrypt(
+                    cipher.toString(),
+                    passwordHash,
+                ).toString(enc.Utf8);
+                if (privateKey === "") {
+                    throw new Error("Access Denied");
+                }
+            } catch (err) {
+                console.error(err);
+                setError("Access Denied");
+                return;
+            }
 
-        if (unlockCallback) {
-            unlockCallback(privateKey);
-        } else {
-            return;
-        }
-    }, [unlockCallback]);
+            localforage
+                .setItem("faucet-password", originalPassword)
+                .catch(console.error);
 
-    const handleUnlock = React.useCallback((passwordParam?: string) => {
-        setLoading(true);
-        setError(null);
+            if (unlockCallback) {
+                unlockCallback(privateKey);
+            } else {
+                return;
+            }
+        },
+        [unlockCallback],
+    );
 
-        setTimeout(() => {
-            checkPassword(passwordParam || password)
-                .then(() => { setLoading(false); })
-                .catch((err) => {
-                    console.error(err);
-                    setLoading(false);
-                });
-        }, 100);
-    }, [password, checkPassword]);
+    const handleUnlock = React.useCallback(
+        (passwordParam?: string) => {
+            setLoading(true);
+            setError(null);
 
-    const handleUnlockForm = React.useCallback((event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+            setTimeout(() => {
+                checkPassword(passwordParam || password)
+                    .then(() => {
+                        setLoading(false);
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        setLoading(false);
+                    });
+            }, 100);
+        },
+        [password, checkPassword],
+    );
 
-        handleUnlock();
-    }, [handleUnlock]);
+    const handleUnlockForm = React.useCallback(
+        (event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+
+            handleUnlock();
+        },
+        [handleUnlock],
+    );
 
     React.useEffect(() => {
         (async () => {
-            const storedPassword = await localforage.getItem<string>("faucet-password");
+            const storedPassword = await localforage.getItem<string>(
+                "faucet-password",
+            );
             if (storedPassword) {
                 setPassword(storedPassword);
                 handleUnlock(storedPassword);
@@ -103,7 +121,11 @@ const Unlock = ({ unlockCallback }: UnlockProps) => {
                 </form>
             </div>
             <div className="Unlock--after">
-                {loading ? <div className="error"><Loading /></div> : null}
+                {loading ? (
+                    <div className="error">
+                        <Loading />
+                    </div>
+                ) : null}
                 {error !== null ? <div className="error">{error}</div> : null}
             </div>
         </>

@@ -9,8 +9,10 @@ import "./styles.scss";
 /**
  * SelectToken allows the user to select a market from two token dropdowns
  */
-export class SelectToken<Token extends string> extends React.Component<Props<Token>, State> {
-
+export class SelectToken<Token extends string> extends React.Component<
+    Props<Token>,
+    State
+> {
     /**
      * The main render function.
      * @dev Should have minimal computation, loops and anonymous functions.
@@ -22,7 +24,9 @@ export class SelectToken<Token extends string> extends React.Component<Props<Tok
             // tslint:disable-next-line: no-any
             option: (provided: any, state: any) => ({
                 ...provided,
-                backgroundColor: state.isSelected ? "rgba(0, 27, 58, 0.1)" : "transparent",
+                backgroundColor: state.isSelected
+                    ? "rgba(0, 27, 58, 0.1)"
+                    : "transparent",
                 "&:hover": {
                     backgroundColor: "rgba(219, 224, 232, 0.3)",
                 },
@@ -36,7 +40,7 @@ export class SelectToken<Token extends string> extends React.Component<Props<Tok
                 className="Select--currency"
                 classNamePrefix="Select--currency"
                 name="quoteCode"
-                value={tokens.find((option => option.value === token)) || null}
+                value={tokens.find((option) => option.value === token) || null}
                 onChange={this.handleChange}
                 options={tokens}
                 components={{
@@ -56,7 +60,7 @@ export class SelectToken<Token extends string> extends React.Component<Props<Tok
     private readonly handleChange = (event: any): void => {
         const newToken = event.value;
         this.props.onChange(newToken);
-    }
+    };
 }
 
 interface Props<Token> {
@@ -66,5 +70,4 @@ interface Props<Token> {
     onChange(token: Token | undefined | null): void;
 }
 
-interface State {
-}
+interface State {}
