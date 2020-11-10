@@ -64,8 +64,8 @@ export const CustomOption = <X extends OptionType>(props: OptionProps<X>) => {
     return (
         <div
             ref={innerRef}
-            // tslint:disable-next-line: no-any
             className={[
+                // tslint:disable-next-line: no-any
                 (cx as any)(
                     {
                         option: true,

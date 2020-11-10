@@ -53,11 +53,6 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
     constructor(props: FaucetProps, context: object) {
         super(props, context);
 
-        console.log(
-            "process.env.REACT_APP_FILECOIN_TESTNET_URL",
-            process.env.REACT_APP_FILECOIN_TESTNET_URL,
-        );
-
         this.state = {
             recipient: "",
             params: "",
@@ -90,7 +85,6 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
                 TokenIcons.map(async (_icon, token: Token) => {
                     try {
                         const balance = await balanceOf(cryptoAccount, token);
-                        console.log(token, balance.toFixed());
                         this.setState((state) => ({
                             ...state,
                             balances: state.balances.set(token, balance),

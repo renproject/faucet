@@ -1,7 +1,7 @@
 import * as React from "react";
 
-import CryptoAccount from "send-crypto";
 import { OrderedMap } from "immutable";
+import CryptoAccount from "send-crypto";
 
 import { addressSectionTokens } from "../lib/sendCrypto";
 
@@ -21,11 +21,11 @@ export const Addresses = ({
             for (const token of addressSectionTokens) {
                 cryptoAccount
                     .address(token)
-                    .then((address) =>
+                    .then((address) => {
                         setAddresses((currentAddresses) =>
                             currentAddresses.set(token, address),
-                        ),
-                    )
+                        );
+                    })
                     .catch(console.error);
             }
         })().catch(console.error);
