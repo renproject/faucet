@@ -9,11 +9,14 @@ import { ReactComponent as iconBCH } from "../img/bch.svg";
 import { ReactComponent as iconBTC } from "../img/btc.svg";
 import { ReactComponent as iconDAI } from "../img/dai.svg";
 import { ReactComponent as iconETH } from "../img/eth.svg";
+import iconFIL from "../img/fil.png";
 import { ReactComponent as iconREN } from "../img/ren.svg";
 import { ReactComponent as iconRenBCH } from "../img/renBCH.svg";
 import { ReactComponent as iconRenBTC } from "../img/renBTC.svg";
 import { ReactComponent as iconRenZEC } from "../img/renZEC.svg";
 import { ReactComponent as iconZEC } from "../img/zec.svg";
+
+export const addressSectionTokens = ["ETH", "BTC", "ZEC", "BCH", "FIL"];
 
 export enum Token {
     ETH = "ETH",
@@ -21,6 +24,7 @@ export enum Token {
     DAI = "DAI",
     BTC = "BTC",
     ZEC = "ZEC",
+    FIL = "FIL",
     BCH = "BCH",
 
     testBTC = "testBTC",
@@ -34,17 +38,33 @@ const getCryptoAccountToken = (token: Token) => {
         case Token.BTC:
         case Token.ZEC:
         case Token.BCH:
+        case Token.FIL:
             return token;
         case Token.REN:
-            return { type: "ERC20", address: "0x2CD647668494c1B15743AB283A0f980d90a87394" };
+            return {
+                type: "ERC20",
+                address: "0x2CD647668494c1B15743AB283A0f980d90a87394",
+            };
         case Token.DAI:
-            return { type: "ERC20", address: "0xC4375B7De8af5a38a93548eb8453a498222C4fF2" };
+            return {
+                type: "ERC20",
+                address: "0xC4375B7De8af5a38a93548eb8453a498222C4fF2",
+            };
         case Token.testBTC:
-            return { type: "ERC20", address: "0x0A9ADD98C076448CBcFAcf5E457DA12ddbEF4A8f" };
+            return {
+                type: "ERC20",
+                address: "0x0A9ADD98C076448CBcFAcf5E457DA12ddbEF4A8f",
+            };
         case Token.testBCH:
-            return { type: "ERC20", address: "0x618dC53e856b1A601119F2Fed5F1E873bCf7Bd6e" };
+            return {
+                type: "ERC20",
+                address: "0x618dC53e856b1A601119F2Fed5F1E873bCf7Bd6e",
+            };
         case Token.testZEC:
-            return { type: "ERC20", address: "0x42805DA220DF1f8a33C16B0DF9CE876B9d416610" };
+            return {
+                type: "ERC20",
+                address: "0x42805DA220DF1f8a33C16B0DF9CE876B9d416610",
+            };
     }
 };
 
@@ -63,10 +83,12 @@ const getExplorerLink = (token: Token, transactionHash: string) => {
             return `https://chain.so/tx/ZECTEST/${transactionHash}`;
         case Token.BCH:
             return `https://explorer.bitcoin.com/tbch/tx/${transactionHash}`;
+        case Token.FIL:
+            return `https://filfox.info/en/message/${transactionHash}`;
     }
 };
 
-export const TokenIcons = OrderedMap<string, React.FunctionComponent<React.SVGProps<SVGSVGElement>>>()
+export const TokenIcons = OrderedMap<string, React.FC>()
     // ETH and ERC20s
     .set(Token.ETH, iconETH)
     .set(Token.REN, iconREN)
@@ -75,17 +97,18 @@ export const TokenIcons = OrderedMap<string, React.FunctionComponent<React.SVGPr
     .set(Token.BTC, iconBTC)
     .set(Token.ZEC, iconZEC)
     .set(Token.BCH, iconBCH)
+    .set(Token.FIL, (props) => <img {...props} alt="FIL" src={iconFIL} />)
     // Shifted tokens
     .set(Token.testBTC, iconRenBTC)
     .set(Token.testZEC, iconRenZEC)
-    .set(Token.testBCH, iconRenBCH)
-    ;
+    .set(Token.testBCH, iconRenBCH);
 
 export const sendTokens = async (
     cryptoAccount: CryptoAccount,
     token: Token,
     recipient: string,
     amount: string,
+    params: string,
     addMessage: (msg: Message) => void,
 ): Promise<void> => {
     if (isNaN(parseInt(amount, 10))) {
@@ -93,12 +116,22 @@ export const sendTokens = async (
     }
     try {
         const txHash: string = await new Promise((resolve, reject) => {
-            cryptoAccount.send(recipient, amount, getCryptoAccountToken(token)).on("transactionHash", resolve).catch(reject);
+            cryptoAccount
+                .send(recipient, amount, getCryptoAccountToken(token), {
+                    params: params === "" ? undefined : params,
+                })
+                .on("transactionHash", resolve)
+                .catch(reject);
         });
         addMessage({
             type: MessageType.INFO,
             key: token,
-            message: <span>Sending {amount} {token} (<a href={getExplorerLink(token, txHash)}>Explorer Link</a>)</span>,
+            message: (
+                <span>
+                    Sending {amount} {token} (
+                    <a href={getExplorerLink(token, txHash)}>Explorer Link</a>)
+                </span>
+            ),
         });
     } catch (error) {
         console.error(error);
@@ -109,22 +142,40 @@ export const sendTokens = async (
             type: MessageType.ERROR,
             key: token,
             message: (
-                <span>Error sending {token}: {error.message}</span>
+                <span>
+                    Error sending {token}: {error.message}
+                </span>
             ),
         });
     }
 };
 
-export const balanceOf = (cryptoAccount: CryptoAccount, token: Token): Promise<BigNumber> => cryptoAccount.balanceOf<BigNumber>(getCryptoAccountToken(token), { bn: BigNumber });
+export const balanceOf = (
+    cryptoAccount: CryptoAccount,
+    token: Token,
+): Promise<BigNumber> =>
+    cryptoAccount.balanceOf<BigNumber>(getCryptoAccountToken(token), {
+        bn: BigNumber,
+    });
 
 // tslint:disable-next-line: no-any
 export const extractError = (error: any): string => {
     if (typeof error === "object") {
-        if (error.response) { return extractError(error.response); }
-        if (error.data) { return extractError(error.data); }
-        if (error.error) { return extractError(error.error); }
-        if (error.message) { return extractError(error.message); }
-        if (error.statusText) { return extractError(error.statusText); }
+        if (error.response) {
+            return extractError(error.response);
+        }
+        if (error.data) {
+            return extractError(error.data);
+        }
+        if (error.error) {
+            return extractError(error.error);
+        }
+        if (error.message) {
+            return extractError(error.message);
+        }
+        if (error.statusText) {
+            return extractError(error.statusText);
+        }
         try {
             return JSON.stringify(error);
         } catch (error) {

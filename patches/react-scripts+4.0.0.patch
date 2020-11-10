@@ -1,8 +1,8 @@
 diff --git a/node_modules/react-scripts/config/webpack.config.js b/node_modules/react-scripts/config/webpack.config.js
-index 25840d9..a2e189c 100644
+index 80c6ac2..849116d 100644
 --- a/node_modules/react-scripts/config/webpack.config.js
 +++ b/node_modules/react-scripts/config/webpack.config.js
-@@ -207,46 +207,46 @@ module.exports = function(webpackEnv) {
+@@ -240,46 +240,46 @@ module.exports = function (webpackEnv) {
        minimize: isEnvProduction,
        minimizer: [
          // This is only used in production mode

@@ -5,7 +5,13 @@ import { List, OrderedMap } from "immutable";
 import AutosizeInput from "react-input-autosize";
 import CryptoAccount from "send-crypto";
 
-import { balanceOf, extractError, sendTokens, Token, TokenIcons } from "../lib/sendCrypto";
+import {
+    balanceOf,
+    extractError,
+    sendTokens,
+    Token,
+    TokenIcons,
+} from "../lib/sendCrypto";
 import { Addresses } from "./Addresses";
 import { SelectToken } from "./selectToken/SelectToken";
 
@@ -22,6 +28,7 @@ export interface Message {
 
 interface FaucetState {
     recipient: string;
+    params: string;
     value: string;
     selectedToken: string | null | undefined;
 
@@ -45,8 +52,15 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
 
     constructor(props: FaucetProps, context: object) {
         super(props, context);
+
+        console.log(
+            "process.env.REACT_APP_FILECOIN_TESTNET_URL",
+            process.env.REACT_APP_FILECOIN_TESTNET_URL,
+        );
+
         this.state = {
             recipient: "",
+            params: "",
             value: "",
             selectedToken: undefined,
 
@@ -55,7 +69,11 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             balances: OrderedMap<string, BigNumber>(),
             balancesLoading: true,
 
-            cryptoAccount: new CryptoAccount(props.privateKey, { network: "kovan" }),
+            cryptoAccount: new CryptoAccount(props.privateKey, {
+                network: "kovan",
+                apiAddress: process.env.REACT_APP_FILECOIN_TESTNET_URL,
+                token: process.env.REACT_APP_FILECOIN_TESTNET_TOKEN,
+            }),
 
             submitting: false,
             showingAddresses: false,
@@ -68,89 +86,165 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
         const loop = async () => {
             this.setState({ balancesLoading: true });
 
-            await Promise.all(TokenIcons.map((async (_icon, token: Token) => {
-                try {
-                    const balance = await balanceOf(cryptoAccount, token);
-                    this.setState(state => ({ ...state, balances: state.balances.set(token, balance) }));
-                } catch (error) {
-                    console.error(error);
-                }
-            })));
+            await Promise.all(
+                TokenIcons.map(async (_icon, token: Token) => {
+                    try {
+                        const balance = await balanceOf(cryptoAccount, token);
+                        console.log(token, balance.toFixed());
+                        this.setState((state) => ({
+                            ...state,
+                            balances: state.balances.set(token, balance),
+                        }));
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }),
+            );
 
             this.setState({ balancesLoading: false });
-            if (this.timeout) { clearTimeout(this.timeout); }
+            if (this.timeout) {
+                clearTimeout(this.timeout);
+            }
             this.timeout = setTimeout(loop, 30 * 1000);
         };
         loop().catch(console.error);
     }
 
     public componentWillUnmount() {
-        if (this.timeout) { clearTimeout(this.timeout); }
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
     }
 
     public render() {
-        const { recipient, messages, balances, submitting, cryptoAccount } = this.state;
+        const {
+            recipient,
+            params,
+            messages,
+            balances,
+            submitting,
+            cryptoAccount,
+        } = this.state;
 
-        return <>
-            <Addresses cryptoAccount={cryptoAccount} />
-            <form className="big-text" onSubmit={this.handleFaucet}>
-                I want to receive
+        return (
+            <>
+                <Addresses cryptoAccount={cryptoAccount} />
+                <form className="big-text" onSubmit={this.handleFaucet}>
+                    I want to receive
                     <br />
-                <input disabled={submitting} className="dashed input" name="value" onChange={this.handleInput}></input>{" "}
-                {/*<input className="dashed input select-token"></input>*/}
-                <SelectToken
-                    token={this.state.selectedToken}
-                    allTokens={TokenIcons.map((icon, token) => ({ label: token, image: icon, value: token, balance: balances.get(token, new BigNumber(0)) }))}
-                    onChange={this.handleSelect}
-                    disabled={submitting}
-                />
-                <br />
-                at the address
+                    <input
+                        disabled={submitting}
+                        className="dashed input"
+                        name="value"
+                        onChange={this.handleInput}
+                    ></input>{" "}
+                    {/*<input className="dashed input select-token"></input>*/}
+                    <SelectToken
+                        token={this.state.selectedToken}
+                        allTokens={TokenIcons.map((icon, token) => ({
+                            label: token,
+                            image: icon,
+                            value: token,
+                            balance: balances.get(token, new BigNumber(0)),
+                        }))}
+                        onChange={this.handleSelect}
+                        disabled={submitting}
+                    />
                     <br />
-                <AutosizeInput disabled={submitting} className="input dashed-address" value={recipient} name="recipient" onChange={this.handleInput} />
-                {/*<span contentEditable={true} className="dashed dashed-address"></span>*/}
-                <input disabled={submitting} type="submit" style={{ position: "absolute", left: "-9999px" }} />
-
-                {messages.map((msg: Message | undefined) => {
-                    if (!msg) {
-                        return <></>;
-                    }
-                    return <div key={msg.key} className={`message message-${msg.type}`}>
-                        {msg.message}
-                    </div>;
-                })}
-            </form>
-        </>;
+                    at the address
+                    <br />
+                    <AutosizeInput
+                        disabled={submitting}
+                        className="input dashed-address"
+                        value={recipient}
+                        name="recipient"
+                        onChange={this.handleInput}
+                    />
+                    {this.state.selectedToken === "FIL" ? (
+                        <>
+                            <br />
+                            with params
+                            <br />
+                            <AutosizeInput
+                                disabled={submitting}
+                                className="input dashed-address"
+                                value={params}
+                                name="params"
+                                onChange={this.handleInput}
+                                placeholder="base64 (optional)"
+                            />
+                        </>
+                    ) : null}
+                    {/*<span contentEditable={true} className="dashed dashed-address"></span>*/}
+                    <input
+                        disabled={submitting}
+                        type="submit"
+                        style={{ position: "absolute", left: "-9999px" }}
+                    />
+                    {messages.map((msg: Message | undefined) => {
+                        if (!msg) {
+                            return <></>;
+                        }
+                        return (
+                            <div
+                                key={msg.key}
+                                className={`message message-${msg.type}`}
+                            >
+                                {msg.message}
+                            </div>
+                        );
+                    })}
+                </form>
+            </>
+        );
     }
 
     public showAddresses = () => {
         this.setState({ showingAddresses: true });
-    }
+    };
 
     public addMessage = (msg: Message) => {
         const messages = this.state.messages;
         this.setState({ messages: messages.push(msg) });
-    }
+    };
 
     private readonly handleSelect = (selectedToken: string): void => {
         this.setState({ selectedToken });
-    }
+    };
 
-    private readonly handleInput = (event: React.FormEvent<HTMLInputElement>): void => {
-        const element = (event.target as HTMLInputElement);
+    private readonly handleInput = (
+        event: React.FormEvent<HTMLInputElement>,
+    ): void => {
+        const element = event.target as HTMLInputElement;
         this.setState((state) => ({ ...state, [element.name]: element.value }));
-    }
+    };
 
-    private readonly handleFaucet = async (event: React.FormEvent<HTMLFormElement>) => {
+    private readonly handleFaucet = async (
+        event: React.FormEvent<HTMLFormElement>,
+    ) => {
         event.preventDefault();
-        const { recipient, cryptoAccount, selectedToken, value, submitting } = this.state;
+        const {
+            recipient,
+            params,
+            cryptoAccount,
+            selectedToken,
+            value,
+            submitting,
+        } = this.state;
         if (!selectedToken || recipient === "" || value === "" || submitting) {
             return;
         }
 
         this.setState({ submitting: true, messages: List() });
         try {
-            await sendTokens(cryptoAccount, selectedToken as Token, recipient, value, this.addMessage);
+            await sendTokens(
+                cryptoAccount,
+                selectedToken as Token,
+                recipient,
+                value,
+                params,
+                this.addMessage,
+            );
         } catch (err) {
             console.error(err);
             this.addMessage({
@@ -160,7 +254,7 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             });
         }
         this.setState({ submitting: false });
-    }
+    };
 }
 
 export default Faucet;

@@ -1,20 +1,17 @@
 {
   "compilerOptions": {
-    "plugins": [{
-      "name": "typescript-tslint-plugin"
-    }],
+    "plugins": [
+      {
+        "name": "typescript-tslint-plugin"
+      }
+    ],
     "outDir": "build/dist",
     "module": "esnext",
     "target": "es5",
-    "lib": [
-      "es2015",
-      "es2017",
-      "dom",
-      "esnext"
-    ],
+    "lib": ["es2015", "es2017", "dom", "esnext"],
     "sourceMap": true,
     "allowJs": true,
-    "jsx": "preserve",
+    "jsx": "react",
     "moduleResolution": "node",
     "rootDir": "src",
     "forceConsistentCasingInFileNames": true,
@@ -31,7 +28,8 @@
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
     "strict": false,
-    "strictFunctionTypes": false
+    "strictFunctionTypes": false,
+    "noFallthroughCasesInSwitch": true
   },
   "exclude": [
     "node_modules",
@@ -42,7 +40,5 @@
     "jest",
     "src/setupTests.ts"
   ],
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

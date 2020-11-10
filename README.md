@@ -2,15 +2,16 @@
 
 This is a password-protected faucet that can be hosted on Github pages.
 
-> *Note that anyone with the password can withdraw all funds.*
+> _Note that anyone with the password can withdraw all funds._
 
 Currently supports **testnet** only. Supported cryptocurrencies:
 
-* BTC
-* BCH
-* ZEC
-* ETH
-* ERC20 tokens
+-   BTC
+-   ZEC
+-   BCH
+-   FIL
+-   ETH
+-   ERC20 tokens
 
 # Setting up
 
