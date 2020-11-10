@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/faucet/static/css/main.8084c691.chunk.css",
-    "main.js": "/faucet/static/js/main.a5ceb55e.chunk.js",
-    "main.js.map": "/faucet/static/js/main.a5ceb55e.chunk.js.map",
+    "main.css": "/faucet/static/css/main.719e0321.chunk.css",
+    "main.js": "/faucet/static/js/main.6ebd12a7.chunk.js",
+    "main.js.map": "/faucet/static/js/main.6ebd12a7.chunk.js.map",
     "runtime-main.js": "/faucet/static/js/runtime-main.34ba40dc.js",
     "runtime-main.js.map": "/faucet/static/js/runtime-main.34ba40dc.js.map",
-    "static/js/2.2c842345.chunk.js": "/faucet/static/js/2.2c842345.chunk.js",
-    "static/js/2.2c842345.chunk.js.map": "/faucet/static/js/2.2c842345.chunk.js.map",
+    "static/js/2.5220b2c0.chunk.js": "/faucet/static/js/2.5220b2c0.chunk.js",
+    "static/js/2.5220b2c0.chunk.js.map": "/faucet/static/js/2.5220b2c0.chunk.js.map",
     "index.html": "/faucet/index.html",
-    "static/css/main.8084c691.chunk.css.map": "/faucet/static/css/main.8084c691.chunk.css.map",
-    "static/media/App.scss": "/faucet/static/media/Cantarell.771a81c0.ttf",
-    "static/media/Lock.352848fb.svg": "/faucet/static/media/Lock.352848fb.svg",
+    "static/css/main.719e0321.chunk.css.map": "/faucet/static/css/main.719e0321.chunk.css.map",
+    "static/media/index.scss": "/faucet/static/media/Cantarell.771a81c0.ttf",
+    "static/media/Lock.5ed81c30.svg": "/faucet/static/media/Lock.5ed81c30.svg",
     "static/media/bch.d3543778.svg": "/faucet/static/media/bch.d3543778.svg",
     "static/media/btc.807489f4.svg": "/faucet/static/media/btc.807489f4.svg",
     "static/media/dai.9f1d001b.svg": "/faucet/static/media/dai.9f1d001b.svg",
@@ -24,8 +24,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.34ba40dc.js",
-    "static/js/2.2c842345.chunk.js",
-    "static/css/main.8084c691.chunk.css",
-    "static/js/main.a5ceb55e.chunk.js"
+    "static/js/2.5220b2c0.chunk.js",
+    "static/css/main.719e0321.chunk.css",
+    "static/js/main.6ebd12a7.chunk.js"
   ]
 }
