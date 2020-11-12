@@ -1,6 +1,6 @@
 {
     "name": "faucet",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "private": true,
     "homepage": "https://renproject.github.io/faucet",
     "dependencies": {
