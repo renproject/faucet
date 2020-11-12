@@ -62,7 +62,6 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             cryptoAccount: new CryptoAccount(props.privateKey, {
                 network: "kovan",
                 apiAddress: process.env.REACT_APP_FILECOIN_TESTNET_URL,
-                token: process.env.REACT_APP_FILECOIN_TESTNET_TOKEN,
             }),
 
             submitting: false,
