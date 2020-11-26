@@ -1,7 +1,6 @@
-import * as React from "react";
-
 import { AES, enc, SHA256 } from "crypto-js";
 import localforage from "localforage";
+import React from "react";
 
 import { Loading } from "./Loading";
 import { ReactComponent as Lock } from "./Lock.svg";

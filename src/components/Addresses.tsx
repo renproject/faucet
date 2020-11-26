@@ -1,6 +1,5 @@
-import * as React from "react";
-
 import { OrderedMap } from "immutable";
+import React from "react";
 import CryptoAccount from "send-crypto";
 
 import { getAddress } from "../lib/sendCrypto";
@@ -50,9 +49,9 @@ export const Addresses = ({
                 >
                     <p>Version {version}</p>
                     {TokensForAddressBox.map((token) => (
-                        <p>
+                        <p key={token.name}>
                             <span>{token.name} address:</span>{" "}
-                            <div>{addresses.get(token.name) || ""}</div>
+                            <span>{addresses.get(token.name) || ""}</span>
                         </p>
                     )).valueSeq()}
                 </span>

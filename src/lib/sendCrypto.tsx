@@ -1,6 +1,5 @@
-import * as React from "react";
-
 import BigNumber from "bignumber.js";
+import React from "react";
 import CryptoAccount from "send-crypto";
 
 import { Message, MessageType } from "../components/Faucet";

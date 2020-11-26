@@ -1,6 +1,5 @@
-import * as React from "react";
-
 import { OrderedMap } from "immutable";
+import React from "react";
 import Select from "react-select";
 
 import { CustomOption, CustomValue, OptionType } from "./Select";

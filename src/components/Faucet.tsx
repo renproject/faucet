@@ -1,7 +1,6 @@
-import * as React from "react";
-
 import BigNumber from "bignumber.js";
 import { List, OrderedMap } from "immutable";
+import React from "react";
 import AutosizeInput from "react-input-autosize";
 import CryptoAccount from "send-crypto";
 

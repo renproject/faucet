@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 /**
  * Loading is a visual component that renders a spinning animation

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import Faucet from "./Faucet";
 import Unlock from "./Unlock";

@@ -1,6 +1,5 @@
-import * as React from "react";
-
 import BigNumber from "bignumber.js";
+import React from "react";
 import { OptionProps } from "react-select/src/components/Option";
 import { SingleValueProps } from "react-select/src/components/SingleValue";
 

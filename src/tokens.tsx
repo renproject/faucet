@@ -1,6 +1,5 @@
-import * as React from "react";
-
 import { OrderedMap } from "immutable";
+import React from "react";
 
 import { ReactComponent as iconBCH } from "./img/bch.svg";
 import { ReactComponent as iconBTC } from "./img/btc.svg";
@@ -40,6 +39,12 @@ export const Tokens = OrderedMap<string, TokenDetails>()
         name: "BTC",
         explorer: (txHash) => `https://chain.so/tx/BTCTEST/${txHash}`,
         icon: iconBTC,
+        showAddress: true,
+    })
+    .set("ZEC", {
+        name: "ZEC",
+        explorer: (txHash) => `https://chain.so/tx/ZECTEST/${txHash}`,
+        icon: iconZEC,
         showAddress: true,
     })
     .set("FIL", {
@@ -87,13 +92,6 @@ export const Tokens = OrderedMap<string, TokenDetails>()
         icon: iconRenZEC,
     })
     // Disabled ////////////////////////////////////////////////////////////////
-    .set("ZEC", {
-        name: "ZEC",
-        explorer: (txHash) => `https://chain.so/tx/ZECTEST/${txHash}`,
-        icon: iconZEC,
-        showAddress: true,
-        disabled: true,
-    })
     .set("BCH", {
         name: "BCH",
         explorer: (txHash) => `https://explorer.bitcoin.com/tbch/tx/${txHash}`,
