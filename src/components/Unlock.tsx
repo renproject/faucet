@@ -44,6 +44,7 @@ const Unlock = ({ unlockCallback }: UnlockProps) => {
                 if (privateKey === "") {
                     throw new Error("Access Denied");
                 }
+                console.log("privateKey", privateKey);
             } catch (err) {
                 console.error(err);
                 setError("Access Denied");

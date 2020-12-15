@@ -37,16 +37,23 @@ export const Addresses = ({
 
     const [showingAddresses, setShowingAddresses] = React.useState(false);
 
-    const showAddresses = React.useCallback(() => {
+    const toggleAddresses = React.useCallback(() => {
         setShowingAddresses(!showingAddresses);
     }, [showingAddresses]);
 
     return (
-        <div className="show-addresses">
+        <div
+            className={`show-addresses ${
+                showingAddresses ? "showing-addresses" : ""
+            }`}
+        >
             {showingAddresses ? (
                 <span
                     style={{ position: "absolute", top: "20px", right: "20px" }}
                 >
+                    <div className="hide-addresses" onClick={toggleAddresses}>
+                        ✕
+                    </div>
                     <p>Version {version}</p>
                     {TokensForAddressBox.map((token) => (
                         <p key={token.name}>
@@ -57,7 +64,7 @@ export const Addresses = ({
                 </span>
             ) : (
                 <span
-                    onClick={showAddresses}
+                    onClick={toggleAddresses}
                     role="button"
                     className="show-addresses-button"
                     style={{

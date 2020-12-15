@@ -11,6 +11,7 @@ import { ReactComponent as iconRenBCH } from "./img/renBCH.svg";
 import { ReactComponent as iconRenBTC } from "./img/renBTC.svg";
 import { ReactComponent as iconRenZEC } from "./img/renZEC.svg";
 import { ReactComponent as iconZEC } from "./img/zec.svg";
+import { ReactComponent as iconLUNA } from "./img/luna.svg";
 
 export interface TokenDetails {
     // The name of the asset/token.
@@ -53,6 +54,13 @@ export const Tokens = OrderedMap<string, TokenDetails>()
         icon: (props) => (
             <img {...props} role="presentation" alt="" src={iconFIL} />
         ),
+        showAddress: true,
+    })
+    .set("LUNA", {
+        name: "LUNA",
+        explorer: (txHash) =>
+            `https://finder.terra.money/tequila-0004/tx/${txHash}`,
+        icon: iconLUNA,
         showAddress: true,
     })
     .set("ETH", {

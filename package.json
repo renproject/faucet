@@ -21,7 +21,7 @@
         "react-input-autosize": "^2.2.2",
         "react-scripts": "4.0.1",
         "react-select": "^3.1.1",
-        "send-crypto": "^0.2.27",
+        "send-crypto": "^0.2.28",
         "typescript": "^4.1.2"
     },
     "devDependencies": {

@@ -23,6 +23,7 @@ export interface Message {
 interface FaucetState {
     recipient: string;
     params: string;
+    memo: string;
     value: string;
     selectedToken: string | null | undefined;
 
@@ -50,6 +51,7 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
         this.state = {
             recipient: "",
             params: "",
+            memo: "",
             value: "",
             selectedToken: undefined,
 
@@ -61,6 +63,9 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
             cryptoAccount: new CryptoAccount(props.privateKey, {
                 network: "kovan",
                 apiAddress: process.env.REACT_APP_FILECOIN_TESTNET_URL,
+                terra: {
+                    URL: "https://tequila-lcd.terra.dev",
+                },
             }),
 
             submitting: false,
@@ -113,6 +118,7 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
         const {
             recipient,
             params,
+            memo,
             messages,
             balances,
             submitting,
@@ -174,6 +180,21 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
                             />
                         </>
                     ) : null}
+                    {this.state.selectedToken === "LUNA" ? (
+                        <>
+                            <br />
+                            with memo
+                            <br />
+                            <AutosizeInput
+                                disabled={submitting}
+                                className="input dashed-address"
+                                value={memo}
+                                name="memo"
+                                onChange={this.handleInput}
+                                placeholder="(optional)"
+                            />
+                        </>
+                    ) : null}
                     {/*<span contentEditable={true} className="dashed dashed-address"></span>*/}
                     <input
                         disabled={submitting}
@@ -229,6 +250,7 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
         const {
             recipient,
             params,
+            memo,
             cryptoAccount,
             selectedToken,
             value,
@@ -252,6 +274,7 @@ class Faucet extends React.Component<FaucetProps, FaucetState> {
                 recipient,
                 value,
                 params,
+                memo,
                 this.addMessage,
             );
         } catch (err) {

@@ -291,6 +291,13 @@ input[type="text"]:disabled {
     padding: 15px 0;
 }
 
+.showing-addresses > span {
+    border: 2px dashed black !important;
+    padding: 20px;
+    background: white;
+    position: relative;
+}
+
 .show-addresses > span > p {
     display: flex;
     margin: 0;
@@ -306,4 +313,14 @@ input[type="text"]:disabled {
         margin-right: 10px;
         font-family: monospace;
     }
+}
+
+.hide-addresses {
+    position: absolute;
+    top: -5px;
+    right: 0px;
+    font-weight: 100;
+    font-size: 25px;
+    padding: 5px;
+    cursor: pointer;
 }

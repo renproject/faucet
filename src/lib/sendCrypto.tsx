@@ -11,6 +11,7 @@ export const sendTokens = async (
     recipient: string,
     amount: string,
     params: string,
+    memo: string,
     addMessage: (msg: Message) => void,
 ): Promise<void> => {
     if (isNaN(parseInt(amount, 10))) {
@@ -21,6 +22,7 @@ export const sendTokens = async (
             cryptoAccount
                 .send(recipient, amount, token.sendCrypto || token.name, {
                     params: params === "" ? undefined : params,
+                    memo: memo === "" ? undefined : memo,
                 })
                 .on("transactionHash", resolve)
                 .catch(reject);
