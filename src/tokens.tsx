@@ -48,6 +48,12 @@ export const Tokens = OrderedMap<string, TokenDetails>()
         icon: iconZEC,
         showAddress: true,
     })
+    .set("BCH", {
+        name: "BCH",
+        explorer: (txHash) => `https://explorer.bitcoin.com/tbch/tx/${txHash}`,
+        icon: iconBCH,
+        showAddress: true,
+    })
     .set("FIL", {
         name: "FIL",
         explorer: (txHash) => `https://filfox.info/en/message/${txHash}`,
@@ -98,12 +104,4 @@ export const Tokens = OrderedMap<string, TokenDetails>()
         sendCrypto: ERC20("0x42805DA220DF1f8a33C16B0DF9CE876B9d416610"),
         explorer: etherscan,
         icon: iconRenZEC,
-    })
-    // Disabled ////////////////////////////////////////////////////////////////
-    .set("BCH", {
-        name: "BCH",
-        explorer: (txHash) => `https://explorer.bitcoin.com/tbch/tx/${txHash}`,
-        icon: iconBCH,
-        showAddress: true,
-        disabled: true,
     });
