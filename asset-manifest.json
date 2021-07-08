@@ -1,12 +1,12 @@
 {
   "files": {
     "main.css": "/faucet/static/css/main.5caaf873.chunk.css",
-    "main.js": "/faucet/static/js/main.16ee2745.chunk.js",
-    "main.js.map": "/faucet/static/js/main.16ee2745.chunk.js.map",
+    "main.js": "/faucet/static/js/main.4259ff55.chunk.js",
+    "main.js.map": "/faucet/static/js/main.4259ff55.chunk.js.map",
     "runtime-main.js": "/faucet/static/js/runtime-main.34ba40dc.js",
     "runtime-main.js.map": "/faucet/static/js/runtime-main.34ba40dc.js.map",
-    "static/js/2.ee9174cb.chunk.js": "/faucet/static/js/2.ee9174cb.chunk.js",
-    "static/js/2.ee9174cb.chunk.js.map": "/faucet/static/js/2.ee9174cb.chunk.js.map",
+    "static/js/2.f0f1697f.chunk.js": "/faucet/static/js/2.f0f1697f.chunk.js",
+    "static/js/2.f0f1697f.chunk.js.map": "/faucet/static/js/2.f0f1697f.chunk.js.map",
     "index.html": "/faucet/index.html",
     "static/css/main.5caaf873.chunk.css.map": "/faucet/static/css/main.5caaf873.chunk.css.map",
     "static/media/index.scss": "/faucet/static/media/Cantarell.771a81c0.ttf",
@@ -25,8 +25,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.34ba40dc.js",
-    "static/js/2.ee9174cb.chunk.js",
+    "static/js/2.f0f1697f.chunk.js",
     "static/css/main.5caaf873.chunk.css",
-    "static/js/main.16ee2745.chunk.js"
+    "static/js/main.4259ff55.chunk.js"
   ]
 }
